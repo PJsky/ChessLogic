@@ -7,8 +7,9 @@ namespace ChessLogicLibrary.ChessPieces
 {
     public interface IChessPiece
     {
+        string Name { get; }
         ColorsEnum Color { get; set; }
-        string Name { get; set; }
         Position Position { get;  }
+        void Move();
     }
 }

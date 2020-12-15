@@ -11,7 +11,7 @@ namespace XUnitChessTest
         {
             IChessPiece bishopWhite = new Bishop(0, 3, 1);
             IChessPiece bishopBlack = new Bishop(1, 3, 8);
-            
+
             Assert.Equal(ColorsEnum.White, bishopWhite.Color);
             Assert.Equal(3, bishopWhite.Position.ColumnPosition);
             Assert.Equal(1, bishopWhite.Position.RowPosition);
@@ -19,6 +19,9 @@ namespace XUnitChessTest
             Assert.Equal(ColorsEnum.Black, bishopBlack.Color);
             Assert.Equal(3, bishopBlack.Position.ColumnPosition);
             Assert.Equal(8, bishopBlack.Position.RowPosition);
+
+            Assert.Equal(bishopBlack.Name, bishopWhite.Name);
         }
+
     }
 }

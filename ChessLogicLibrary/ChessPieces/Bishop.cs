@@ -5,16 +5,13 @@ using ChessLogicLibrary.ChessPiecePosition;
 
 namespace ChessLogicLibrary.ChessPieces
 {
-    public class Bishop : IChessPiece
+    public class Bishop : StandardChessPiece
     {
-        public Bishop(int colorId, int columnPosition, int rowPosition)
+        public override string Name { get; } = "Bishop";
+        public Bishop(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}   
+        public override void Move()
         {
-            Color = (ColorsEnum)colorId;
-            position = new Position(columnPosition, rowPosition);
+            throw new NotImplementedException();
         }
-        public string Name { get; set; }
-        public ColorsEnum Color { get; set; }
-        private Position position;
-        public Position Position { get { return position; } }
     }
 }
