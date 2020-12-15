@@ -23,7 +23,6 @@ namespace XUnitChessTest
             Assert.Equal(ColorsEnum.Black, kingBlack.Color);
             Assert.Equal(3, kingBlack.Position.ColumnPosition);
             Assert.Equal(8, kingBlack.Position.RowPosition);
-
         }
 
     }

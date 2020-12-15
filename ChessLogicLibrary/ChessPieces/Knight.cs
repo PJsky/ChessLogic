@@ -4,7 +4,15 @@ using System.Text;
 
 namespace ChessLogicLibrary.ChessPieces
 {
-    public class Knight
+    public class Knight : StandardChessPiece
     {
+
+        public override string Name { get; } = "Knight";
+        public Knight(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}
+
+        public override void Move()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
