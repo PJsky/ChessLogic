@@ -11,9 +11,10 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
     public class BishopMoveVerifier : IChessMoveVerifier
     {
         public bool Verify(IChessPiece chessPieceMoved,
-                           int finalColumnPosition, int finalRowPosition, 
-                           List<IChessPiece> chessPiecesList)
+                           int finalColumnPosition, int finalRowPosition,
+                           List<IChessPiece> chessPiecesList = null)
         {
+            chessPiecesList = chessPiecesList ?? new List<IChessPiece>();
             if (!IsBishopMovement(chessPieceMoved, finalColumnPosition, finalRowPosition) ||
                 IsOtherPieceBlockingMove(chessPieceMoved,finalColumnPosition,finalRowPosition,chessPiecesList)) 
                 return false;
@@ -35,8 +36,8 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
                                         int finalColumnPosition, int finalRowPosition,
                                         List<IChessPiece> chessPiecesList)
         {
-            //Assign all the other color pieces
-            //var PiecesInTheWay = chessPiecesList.Where(cp => cp.Color != chessPieceMoved.Color);
+            //Check if there are pieces on board
+            if (chessPiecesList.Count < 1) return false;
             
             //Filter all the ones not in the way
             var PiecesInTheWay = chessPiecesList.Where(cp => IsBishopMovement(chessPieceMoved, cp.Position.ColumnPosition, cp.Position.RowPosition));
@@ -53,9 +54,13 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
                 PiecesInTheWay = PiecesInTheWay.Where(cp => chessPieceMoved.Position.ColumnPosition < cp.Position.ColumnPosition);
             else
                 PiecesInTheWay = PiecesInTheWay.Where(cp => chessPieceMoved.Position.ColumnPosition > cp.Position.ColumnPosition);
+            //Check if any pieces remain
+            if (PiecesInTheWay.ToList().Count < 1) return false;
+
             //Take first one
             var closestPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
-            var closestPieceInTheWay = PiecesInTheWay.OrderBy(cp => cp, closestPieceComparer).First();
+            IChessPiece closestPieceInTheWay;
+            closestPieceInTheWay = PiecesInTheWay.OrderBy(cp => cp, closestPieceComparer).First();
 
             var distanceBetweenDestinationAndClosets = closestPieceComparer.Compare(new Bishop(0, finalColumnPosition, finalRowPosition), closestPieceInTheWay);
 

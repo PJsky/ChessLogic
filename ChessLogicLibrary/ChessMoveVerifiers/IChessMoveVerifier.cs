@@ -10,6 +10,6 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
     {
         bool Verify(IChessPiece chessPieceMoved,
                     int finalColumnPosition, int finalRowPosition,
-                    List<IChessPiece> chessPiecesList);
+                    List<IChessPiece> chessPiecesList = null);
     }
 }
