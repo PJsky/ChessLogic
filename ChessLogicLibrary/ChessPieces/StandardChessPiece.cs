@@ -14,8 +14,8 @@ namespace ChessLogicLibrary.ChessPieces
             Position = new Position(columnPosition, rowPosition);
         }
         public ColorsEnum Color { get; set; }
-        public Position Position { get; }
-        public abstract void Move();
+        public Position Position { get; protected set; }
+        public abstract void Move(int columnPosition, int rowPosition);
 
     }
 }

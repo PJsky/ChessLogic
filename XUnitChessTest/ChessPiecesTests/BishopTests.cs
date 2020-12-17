@@ -13,5 +13,17 @@ namespace XUnitChessTest
             Assert.Equal("Bishop", bishop.Name);
         }
 
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(7, 1)]
+        [InlineData(1, 7)]
+        [InlineData(7, 7)]
+        public void Move_ValidPosition_ReturnsNewPosition(int columnPosition, int rowPosition)
+        {
+            IChessPiece bishop = new Bishop(0, 4, 4);
+            bishop.Move(columnPosition, rowPosition);
+
+        }
+
     }
 }

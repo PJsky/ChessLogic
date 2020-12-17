@@ -9,7 +9,7 @@ namespace ChessLogicLibrary.ChessPieces
     {
         string Name { get; }
         ColorsEnum Color { get; set; }
-        Position Position { get;  }
-        void Move();
+        Position Position { get; }
+        void Move(int columnPosition, int rowPosition);
     }
 }
