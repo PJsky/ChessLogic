@@ -23,6 +23,8 @@ namespace XUnitChessTest
             IChessPiece bishop = new Bishop(0, 4, 4);
             bishop.Move(columnPosition, rowPosition);
 
+            Assert.Equal(bishop.Position.ColumnPosition, columnPosition);
+            Assert.Equal(bishop.Position.RowPosition, rowPosition);
         }
 
     }

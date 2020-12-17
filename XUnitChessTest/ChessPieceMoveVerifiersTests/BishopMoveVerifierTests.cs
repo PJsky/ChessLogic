@@ -10,6 +10,17 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
     public class BishopMoveVerifierTests
     {
 
+        [Fact] 
+        public void Verify_ValidDataForMoveWithNoOtherPieces_ReturnsTrue()
+        {
+            IChessPiece bishop = new Bishop(0, 0, 0);
+            IChessMoveVerifier bishopMoveVerifier = new BishopMoveVerifier();
+
+            var result = bishopMoveVerifier.Verify(bishop, -1, -1);
+
+            Assert.True(result);
+        }
+
         [Fact]
         public void Verify_ValidDataForMove_ReturnsTrue()
         {

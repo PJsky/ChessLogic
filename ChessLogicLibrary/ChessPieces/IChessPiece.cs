@@ -10,6 +10,6 @@ namespace ChessLogicLibrary.ChessPieces
         string Name { get; }
         ColorsEnum Color { get; set; }
         Position Position { get; }
-        void Move(int columnPosition, int rowPosition);
+        void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
     }
 }

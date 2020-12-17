@@ -10,7 +10,7 @@ namespace ChessLogicLibrary.ChessPieces
         public override string Name { get; } = "Knight";
         public Knight(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}
 
-        public override void Move(int columnPosition, int rowPosition)
+        public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
         {
             throw new NotImplementedException();
         }
