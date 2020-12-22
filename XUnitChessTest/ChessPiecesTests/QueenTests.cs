@@ -12,6 +12,5 @@ namespace XUnitChessTest
             IChessPiece queen = new Queen(1, 1, 1);
             Assert.Equal("Queen", queen.Name);
         }
-
     }
 }

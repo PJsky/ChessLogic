@@ -26,5 +26,18 @@ namespace XUnitChessTest
             Assert.Equal(finalDestinationRow, rook.Position.RowPosition);
         }
 
+        [Theory]
+        [InlineData(10, 6)]
+        [InlineData(-10, 6)]
+        [InlineData(8, 10)]
+        [InlineData(2, -12)]
+        public void Move_InvalidPosition_ReturnsStartingPosition(int finalDestinationColumn, int finalDestinationRow)
+        {
+            IChessPiece rook = new Rook(0, 5, 5);
+            rook.Move(finalDestinationColumn, finalDestinationRow);
+            Assert.Equal(5, rook.Position.ColumnPosition);
+            Assert.Equal(5, rook.Position.RowPosition);
+        }
+
     }
 }

@@ -27,5 +27,19 @@ namespace XUnitChessTest
             Assert.Equal(bishop.Position.RowPosition, rowPosition);
         }
 
+        [Theory]
+        [InlineData(5, 1)]
+        [InlineData(7, 3)]
+        [InlineData(4, 7)]
+        [InlineData(7, 8)]
+        public void Move_InvalidPosition_ReturnsStartingPosition(int columnPosition, int rowPosition)
+        {
+            IChessPiece bishop = new Bishop(0, 4, 4);
+            bishop.Move(columnPosition, rowPosition);
+
+            Assert.Equal(4,bishop.Position.ColumnPosition);
+            Assert.Equal(4,bishop.Position.RowPosition);
+        }
+
     }
 }
