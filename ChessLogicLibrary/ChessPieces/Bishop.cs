@@ -23,3 +23,4 @@ namespace ChessLogicLibrary.ChessPieces
         private IChessMoveVerifier bishopMoveVerifier = new BishopMoveVerifier();
     }
 }
+ 

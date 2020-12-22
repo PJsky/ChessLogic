@@ -37,6 +37,28 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
             Assert.True(result);
         }
 
+
+        [Theory]
+        [InlineData(10,10,20,20)]
+        [InlineData(-10,-10,-20,-20)]
+        [InlineData(10,-10,20,-20)]
+        [InlineData(-10,10,-20,20)]
+        public void Verify_OtherPieceBlocksTheWay_ReturnsFalse(int blockingColumnPosition, int blockingRowPosition,
+                                                             int finalDestinationColumn, int finalDestinationRow)
+        {
+            IChessPiece bishop = new Bishop(0, 5, 5);
+            List<IChessPiece> otherPieces = new List<IChessPiece>();
+
+            otherPieces.Add(new Bishop(0, blockingColumnPosition, blockingRowPosition));
+            otherPieces.Add(new Bishop(0, 10, 9));
+
+            IChessMoveVerifier bishopMoveVerifier = new BishopMoveVerifier();
+
+            var result = bishopMoveVerifier.Verify(bishop, finalDestinationColumn, finalDestinationRow, otherPieces);
+
+            Assert.False(result);
+        }
+
         [Fact]
         public void Verify_BishopAttacksAPiece_ReturnsTrue()
         {
@@ -49,22 +71,6 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
             var result = bishopMoveVerifier.Verify(bishop, 10, 10, otherPieces);
 
             Assert.True(result);
-        }
-
-        [Fact]
-        public void Verify_OtherPieceBlockTheWay_ReturnsTrue()
-        {
-            IChessPiece bishop = new Bishop(0, 5, 5);
-            List<IChessPiece> otherPieces = new List<IChessPiece>();
-
-            otherPieces.Add(new Bishop(0, 10, 10));
-            otherPieces.Add(new Bishop(0, 10, 9));
-
-            IChessMoveVerifier bishopMoveVerifier = new BishopMoveVerifier();
-
-            var result = bishopMoveVerifier.Verify(bishop, 20, 20, otherPieces);
-
-            Assert.False(result);
         }
 
         [Fact]
