@@ -26,6 +26,17 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
             
         }
 
+        [Fact] 
+        public void Verify_DiagonalMoveWithNoOtherPieces_ReturnsFalse()
+        {
+            IChessPiece rook = new Rook(0, 5, 5);
+            IChessMoveVerifier rookMoveVerifier = new RookMoveVerifier();
+
+            var result = rookMoveVerifier.Verify(rook, 10, 10);
+
+            Assert.False(result);
+        }
+
         [Theory]
         [InlineData(4, 5, 0, 5)]
         [InlineData(5, 4, 5, 0)]
