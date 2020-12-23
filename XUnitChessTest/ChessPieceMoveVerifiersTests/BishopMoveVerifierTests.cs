@@ -60,7 +60,7 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
         }
 
         [Fact]
-        public void Verify_BishopAttacksAPiece_ReturnsTrue()
+        public void Verify_BishopAttacksEnemy_ReturnsTrue()
         {
             IChessPiece bishop = new Bishop(0, 5, 5);
             List<IChessPiece> otherPieces = new List<IChessPiece>();

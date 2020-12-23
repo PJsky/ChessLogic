@@ -51,5 +51,32 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
 
         }
 
+        [Fact]
+        public void Verify_KnightAttacksEnemy_ReturnsTrue()
+        {
+            IChessPiece knight = new Knight(0, 5, 5);
+            List<IChessPiece> otherPieces = new List<IChessPiece>();
+            otherPieces.Add(new Knight(1,6,7));
+
+            IChessMoveVerifier knightMoveVerifier = new KnightMoveVerifier();
+
+            var result = knightMoveVerifier.Verify(knight, 6, 7, otherPieces);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void Verify_KnightAttacksSameColor_ReturnsFalse()
+        {
+            IChessPiece knight = new Knight(0, 5, 5);
+            List<IChessPiece> otherPieces = new List<IChessPiece>();
+            otherPieces.Add(new Knight(0, 6, 7));
+
+            IChessMoveVerifier knightMoveVerifier = new KnightMoveVerifier();
+
+            var result = knightMoveVerifier.Verify(knight, 6, 7, otherPieces);
+
+            Assert.False(result);
+        }
     }
 }
