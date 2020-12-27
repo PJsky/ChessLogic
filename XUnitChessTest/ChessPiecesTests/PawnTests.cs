@@ -13,5 +13,14 @@ namespace XUnitChessTest
             Assert.Equal("Pawn", pawn.Name);
         }
 
+        [Fact]
+        public void Move_ValidPosition_ReturnsNewPosition()
+        {
+            IChessPiece pawn = new Pawn(0, 5, 5);
+            pawn.Move(5, 6);
+
+            Assert.Equal(6, pawn.Position.RowPosition);
+        }
+
     }
 }
