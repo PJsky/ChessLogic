@@ -8,6 +8,7 @@ namespace ChessLogicLibrary.ChessPieces
     public abstract class StandardChessPiece : IChessPiece
     {
         public abstract string Name { get; }
+        public bool wasMoved { get; protected set; } = false;
         public StandardChessPiece(int colorId, int columnPosition, int rowPosition)
         {
             Color = (ColorsEnum)colorId;

@@ -27,14 +27,25 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             //Check for horizontal movement to assure it moves only vertically 
             int horizontalMovement = finalColumnPosition - chessPieceMoved.Position.ColumnPosition;
             //Check if it is a move for a proper pawn
-            bool isWhitePawnMove = verticalMovement == 1 && horizontalMovement == 0 && chessPieceMoved.Color == ColorsEnum.White;
-            bool isBlackPawnMove = verticalMovement == -1 && horizontalMovement == 0 && chessPieceMoved.Color == ColorsEnum.Black;
+            bool isWhitePawnMove = (verticalMovement == 1 || (verticalMovement == 2 && chessPieceMoved.wasMoved == false)) && horizontalMovement == 0 && chessPieceMoved.Color == ColorsEnum.White;
+            bool isBlackPawnMove = (verticalMovement == -1 || (verticalMovement == -2 && chessPieceMoved.wasMoved == false)) && chessPieceMoved.Color == ColorsEnum.Black;
 
             if (!isWhitePawnMove && !isBlackPawnMove) return false;
 
+            List<IChessPiece> chessPiecesInTheWay = new List<IChessPiece>();
             if (chessPiecesList.Count >= 1)
             { 
-                var chessPiecesInTheWay = chessPiecesList.Where(cp => cp.Position.ColumnPosition == finalColumnPosition && cp.Position.RowPosition == finalRowPosition).ToList();
+                //If single move check if something blocks destination
+                if(Math.Abs(verticalMovement) == 1)
+                    chessPiecesInTheWay = chessPiecesList.Where(cp => cp.Position.ColumnPosition == finalColumnPosition && cp.Position.RowPosition == finalRowPosition).ToList();
+
+                //If double move check if somthing blocks destination or midway point
+                else if(Math.Abs(verticalMovement) == 2)
+                    chessPiecesInTheWay = chessPiecesList.Where(cp => 
+                    (cp.Position.RowPosition == finalRowPosition || cp.Position.RowPosition == (finalRowPosition + chessPieceMoved.Position.RowPosition) /2) 
+                    && cp.Position.ColumnPosition == finalColumnPosition
+                    ).ToList();
+
                 if (chessPiecesInTheWay.Count >= 1) return false;
             }
             return true;
