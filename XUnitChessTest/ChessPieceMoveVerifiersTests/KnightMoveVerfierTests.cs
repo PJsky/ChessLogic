@@ -37,7 +37,9 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
         [InlineData(4, 5)]
         [InlineData(6, 8)]
         [InlineData(7, 3)]
+        [InlineData(3, 7)]
         [InlineData(8, 6)]
+        [InlineData(2, 6)]
         [InlineData(7, 15)]
         public void Verify_InvalidDataForMoveWithNoOtherPieces_ReturnsFalse(int finalDestinationColumn, int finalDestinationRow)
         {
