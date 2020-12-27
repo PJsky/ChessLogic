@@ -13,8 +13,10 @@ namespace ChessLogicLibrary.ChessPieces
 
         public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
         {
-            if (rookMoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))
+            if (rookMoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard)) { 
                 Position.ChangePosition(columnPosition, rowPosition);
+                wasMoved = true;
+            }
         }
         private IChessMoveVerifier rookMoveVerifier = new RookMoveVerifier();
     }

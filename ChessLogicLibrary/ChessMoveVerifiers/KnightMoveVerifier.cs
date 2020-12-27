@@ -14,7 +14,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             var closestPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
             var moveDistance = closestPieceComparer.Compare(chessPieceMoved, new Knight(0, finalColumnPosition, finalRowPosition));
             
-            if(moveDistance > 2.3f && moveDistance < 2f) return false;
+            if(moveDistance > 2.3f || moveDistance < 2f) return false;
             if (chessPiecesList == null || chessPiecesList.Count < 1) return true;
             IChessPiece pieceAtDestination = chessPiecesList.Where(cp => cp.Position.ColumnPosition == finalColumnPosition && cp.Position.RowPosition == finalRowPosition).FirstOrDefault();
 

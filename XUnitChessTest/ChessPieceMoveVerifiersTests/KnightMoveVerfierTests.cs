@@ -47,7 +47,7 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
 
             var result = knightMoveVerifier.Verify(knight, finalDestinationColumn, finalDestinationRow);
 
-            Assert.True(result);
+            Assert.False(result);
 
         }
 
