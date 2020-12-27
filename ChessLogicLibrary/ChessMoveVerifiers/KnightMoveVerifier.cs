@@ -12,7 +12,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
         public bool Verify(IChessPiece chessPieceMoved, int finalColumnPosition, int finalRowPosition, List<IChessPiece> chessPiecesList = null)
         {
             var closestPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
-            var moveDistance = closestPieceComparer.Compare(new Knight(0, finalColumnPosition, finalRowPosition), chessPieceMoved);
+            var moveDistance = closestPieceComparer.FloatCompare(new Knight(0, finalColumnPosition, finalRowPosition), chessPieceMoved);
             
             if(moveDistance >= Math.Sqrt(8) || moveDistance <= 2f) return false;
             if (chessPiecesList == null || chessPiecesList.Count < 1) return true;
