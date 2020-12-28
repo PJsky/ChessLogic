@@ -9,14 +9,9 @@ namespace ChessLogicLibrary.ChessPieces
     {
 
         public override string Name { get; } = "Knight";
+        protected override IChessMoveVerifier MoveVerifier { get; set; } = new KnightMoveVerifier();
         public Knight(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition) { }
         public Knight(int colorId, string position) : base(colorId, position) { }
 
-        public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
-        {
-            if (knightMoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))
-                Position.ChangePosition(columnPosition, rowPosition);
-        }
-        private IChessMoveVerifier knightMoveVerifier = new KnightMoveVerifier();
     }
 }

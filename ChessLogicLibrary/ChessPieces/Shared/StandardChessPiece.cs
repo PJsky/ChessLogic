@@ -1,4 +1,5 @@
-﻿using ChessLogicLibrary.ChessPiecePosition;
+﻿using ChessLogicLibrary.ChessMoveVerifiers;
+using ChessLogicLibrary.ChessPiecePosition;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,7 +23,12 @@ namespace ChessLogicLibrary.ChessPieces
         }
         public ColorsEnum Color { get; set; }
         public Position Position { get; protected set; }
-        public abstract void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
+        public virtual void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
+        {
+            if (MoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))
+                Position.ChangePosition(columnPosition, rowPosition);
+        }
+        protected abstract IChessMoveVerifier MoveVerifier { get; set; }
 
     }
 }

@@ -8,14 +8,10 @@ namespace ChessLogicLibrary.ChessPieces
     public class King : StandardChessPiece
     {
         public override string Name { get; } = "King";
+        protected override IChessMoveVerifier MoveVerifier { get; set; } = new KingMoveVerifier();
+
         public King(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}
         public King(int colorId, string position) : base(colorId, position) { }
 
-        public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
-        {
-            if (kingMoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))
-                Position.ChangePosition(columnPosition, rowPosition);
-        }
-        private IChessMoveVerifier kingMoveVerifier = new KingMoveVerifier();
     }
 }

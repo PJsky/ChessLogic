@@ -9,17 +9,8 @@ namespace ChessLogicLibrary.ChessPieces
     {
 
         public override string Name { get; } = "Pawn";
+        protected override IChessMoveVerifier MoveVerifier { get; set; } = new PawnMoveVerifier();
         public Pawn(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}
         public Pawn(int colorId, string position) : base(colorId, position) { }
-
-        public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
-        {
-            if (pawnMoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard)) 
-            {
-                Position.ChangePosition(columnPosition, rowPosition);
-                wasMoved = true;
-            }
-        }
-        private IChessMoveVerifier pawnMoveVerifier = new PawnMoveVerifier();
     }
 }
