@@ -20,7 +20,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
         {
             ClosestChessPieceComparer closestChessPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
             //Check distance between current location and destination
-            var distance = closestChessPieceComparer.Compare(new King(0, finalColumnPosition, finalRowPosition), chessPieceMoved);
+            var distance = closestChessPieceComparer.FloatCompare(new King(0, finalColumnPosition, finalRowPosition), chessPieceMoved);
             //Return false if distance of a move is bigger than 1 horizontal + 1 vertical = sqrt(1^2 + 1^2)
             return distance > Math.Sqrt(2) ? false : true;
         }

@@ -71,7 +71,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             var closestPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
             IChessPiece closestPieceInTheWay = PiecesInTheWay.OrderBy(cp => cp, closestPieceComparer).First();
 
-            var distanceBetweenDestinationAndClosets = closestPieceComparer.Compare(new Rook(0, finalColumnPosition, finalRowPosition), closestPieceInTheWay);
+            var distanceBetweenDestinationAndClosets = closestPieceComparer.FloatCompare(new Rook(0, finalColumnPosition, finalRowPosition), closestPieceInTheWay);
 
             //Check if it blocks the move to final destination or is too far to interrupt movement
             bool isPieceInTheWay = distanceBetweenDestinationAndClosets >= 0;

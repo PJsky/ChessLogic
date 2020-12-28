@@ -45,5 +45,6 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests.ChessPieceComparers
             Assert.Equal(secondPiece, closestToTheMainPiece);
             Assert.True(isSecondValueCloser);
         }
+
     }
 }
