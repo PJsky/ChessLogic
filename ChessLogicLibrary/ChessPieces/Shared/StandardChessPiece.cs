@@ -14,6 +14,12 @@ namespace ChessLogicLibrary.ChessPieces
             Color = (ColorsEnum)colorId;
             Position = new Position(columnPosition, rowPosition);
         }
+
+        public StandardChessPiece(int colorId, string position)
+        {
+            Color = (ColorsEnum)colorId;
+            Position = new Position(position);
+        }
         public ColorsEnum Color { get; set; }
         public Position Position { get; protected set; }
         public abstract void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);

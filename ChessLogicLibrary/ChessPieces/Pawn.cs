@@ -10,6 +10,7 @@ namespace ChessLogicLibrary.ChessPieces
 
         public override string Name { get; } = "Pawn";
         public Pawn(int colorId, int columnPosition, int rowPosition) : base(colorId, columnPosition, rowPosition){}
+        public Pawn(int colorId, string position) : base(colorId, position) { }
 
         public override void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
         {
