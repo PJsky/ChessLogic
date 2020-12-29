@@ -11,11 +11,13 @@ namespace ChessLogicLibrary.PlayerTurnObjects
         public IPlayer PlayerWhite { get; }
         public IPlayer PlayerBlack { get; }
         public ColorsEnum ColorsTurn { get; private set; } = ColorsEnum.White;
+        public StandardChessTimer(){}
         public StandardChessTimer(IPlayer playerWhite, IPlayer playerBlack)
         {
             PlayerWhite = playerWhite;
             PlayerBlack = playerBlack;
         }
+
 
         public void ChangeTurn()
         {

@@ -16,6 +16,7 @@ namespace ChessLogicLibrary.ChessBoardObjects
             ChessPiecesOnBoard = CpFactory.GetChessPieces();
         }
 
+        //Add check whether a apiece is inside chessboard
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
             Position startingPosition = new Position(startingPositionString);

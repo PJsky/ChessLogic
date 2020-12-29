@@ -21,21 +21,20 @@ namespace ChessLogicLibrary
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
-            if (chessBoard.GetAPieceFromPosition(startingPositionString).Color == chessTimer.ColorsTurn) return true;
-
-            bool hasAPieceBeenMoved = chessBoard.MoveAPiece(startingPositionString, finalPositionString);
-            if (hasAPieceBeenMoved)
+            if (chessBoard.GetAPieceFromPosition(startingPositionString).Color == chessTimer.ColorsTurn)
             {
-                if (!hasGameStarted)
-                    StartGame();
+                bool hasAPieceBeenMoved = chessBoard.MoveAPiece(startingPositionString, finalPositionString);
+                if (hasAPieceBeenMoved)
+                {
+                    if (!hasGameStarted)
+                        StartGame();
 
-                chessTimer.ChangeTurn();
+                    chessTimer.ChangeTurn();
+                }
+                return hasAPieceBeenMoved;
             }
-            return hasAPieceBeenMoved;
+            return false;          
         }
-
-        //ChessBoard cb = new ChessBoard();
-        //cb.Move("2B","4B");
 
         public void StartGame()
         {
@@ -43,15 +42,5 @@ namespace ChessLogicLibrary
             hasGameStarted = true;
         }
 
-        //public void Move()
-        //{
-        //    if (MakeAMove("2B", "4B"))
-        //    {
-        //        Timer.ChangePlayer();
-        //        if (!hasGameStarted)
-        //            StartGame();
-        //    }
-
-        //}
     }
 }
