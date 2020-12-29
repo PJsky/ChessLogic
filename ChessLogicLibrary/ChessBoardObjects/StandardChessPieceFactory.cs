@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChessLogicLibrary.ChessBoardObjects
 {
-    public class StandardChessPieceFactory
+    public class StandardChessPieceFactory : IChessPieceFactory
     {
         public List<IChessPiece> GetChessPieces()
         {
@@ -23,7 +23,7 @@ namespace ChessLogicLibrary.ChessBoardObjects
         private List<IChessPiece> getPawns()
         {
             List<IChessPiece> pawns = new List<IChessPiece>();
-            for(int i = 1; i<=8; i++)
+            for (int i = 1; i <= 8; i++)
             {
                 pawns.Add(new Pawn(0, i, 2));
                 pawns.Add(new Pawn(1, i, 7));
