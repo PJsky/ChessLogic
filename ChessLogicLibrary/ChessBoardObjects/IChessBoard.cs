@@ -5,7 +5,8 @@ namespace ChessLogicLibrary.ChessBoardObjects
 {
     public interface IChessBoard
     {
-        List<IChessPiece> chessPiecesOnBoard { get; }
+        List<IChessPiece> ChessPiecesOnBoard { get; }
         bool MoveAPiece(string startingPositionString, string finalPositionString);
+        ColorsEnum GetPiecesColor(string positionString);
     }
 }

@@ -25,10 +25,10 @@ namespace XUnitChessTest.ChessBoardObjectsTests
         public void MoveAPiece_PieceAttacksOtherPiece_ReturnsTrueRemovesOnePiece(string startingPosition, string finalPosition)
         {
             IChessBoard chessBoard = new StandardChessBoard(new TestingChessPieceFactory());
-            int startingAmountOfPieces = chessBoard.chessPiecesOnBoard.Count;
+            int startingAmountOfPieces = chessBoard.ChessPiecesOnBoard.Count;
 
             var hasMoveBeenMade = chessBoard.MoveAPiece(startingPosition, finalPosition);
-            var finalAmountOfPieces = chessBoard.chessPiecesOnBoard.Count;
+            var finalAmountOfPieces = chessBoard.ChessPiecesOnBoard.Count;
             bool wasOnePieceTaken = startingAmountOfPieces - finalAmountOfPieces == 1;
 
             Assert.True(hasMoveBeenMade);

@@ -10,28 +10,37 @@ namespace ChessLogicLibrary.ChessBoardObjects
     public class StandardChessBoard : IChessBoard
     {
         //Has a list of chess pieces with their positions
-        public List<IChessPiece> chessPiecesOnBoard { get; } = new List<IChessPiece>();
+        public List<IChessPiece> ChessPiecesOnBoard { get; } = new List<IChessPiece>();
         public StandardChessBoard(IChessPieceFactory CpFactory)
         {
-            chessPiecesOnBoard = CpFactory.GetChessPieces();
+            ChessPiecesOnBoard = CpFactory.GetChessPieces();
         }
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
             Position startingPosition = new Position(startingPositionString);
             Position finalPosition = new Position(finalPositionString);
-            IChessPiece chessPieceMoved = chessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == startingPosition.ColumnPosition
+            IChessPiece chessPieceMoved = ChessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == startingPosition.ColumnPosition
                                                                  && cp.Position.RowPosition == startingPosition.RowPosition)
                                                                  .First();
-            bool wasPieceMoved = chessPieceMoved.Move(finalPosition.ColumnPosition, finalPosition.RowPosition, chessPiecesOnBoard);
+            bool wasPieceMoved = chessPieceMoved.Move(finalPosition.ColumnPosition, finalPosition.RowPosition, ChessPiecesOnBoard);
             if (wasPieceMoved)
             {
-                chessPiecesOnBoard.RemoveAll(cp => cp.Position.ColumnPosition == finalPosition.ColumnPosition
+                ChessPiecesOnBoard.RemoveAll(cp => cp.Position.ColumnPosition == finalPosition.ColumnPosition
                                              && cp.Position.RowPosition == finalPosition.RowPosition 
                                              && cp != chessPieceMoved);
                 return true;
             }
             return false;
+        }
+
+        public ColorsEnum GetPiecesColor(string positionString)
+        {
+            Position positon = new Position(positionString);
+            IChessPiece chessPieceSearched = ChessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == positon.ColumnPosition
+                                                                 && cp.Position.RowPosition == positon.RowPosition)
+                                                                 .First();
+            return chessPieceSearched.Color;
         }
     }
 }
