@@ -27,6 +27,12 @@ namespace XUnitChessTest.ChessBoardObjectsTests.FakeChessPieceFactories
 
             cpList.Add(new Queen(1, 4, 1));
 
+            //Queens in corners to test if u can get out
+            //Negative values will throw exceptions from string Move method
+            cpList.Add(new Queen(1, 1, 8));
+            cpList.Add(new Queen(1, 8, 1));
+            cpList.Add(new Queen(1, 8, 8));
+
             return cpList;
         }
     }

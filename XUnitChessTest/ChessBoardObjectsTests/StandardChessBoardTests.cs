@@ -34,5 +34,18 @@ namespace XUnitChessTest.ChessBoardObjectsTests
             Assert.True(hasMoveBeenMade);
             Assert.True(wasOnePieceTaken);
         }
+
+        [Theory]
+        [InlineData("H1", "Z1")]
+        [InlineData("H8", "P16")]
+        [InlineData("A8", "A16")]
+        public void MoveAPiece_PieceTriesToGetOutOfBoard_ReturnsFalse(string startingPosition, string finalPosition)
+        {
+            IChessBoard chessBoard = new StandardChessBoard(new TestingChessPieceFactory());
+            bool escapeResult = chessBoard.MoveAPiece(startingPosition, finalPosition);
+
+            Assert.False(escapeResult);
+
+        }
     }
 }
