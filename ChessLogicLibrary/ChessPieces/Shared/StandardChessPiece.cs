@@ -23,10 +23,14 @@ namespace ChessLogicLibrary.ChessPieces
         }
         public ColorsEnum Color { get; set; }
         public Position Position { get; protected set; }
-        public virtual void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
+        public virtual bool Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
         {
-            if (MoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))
+            if (MoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard)) 
+            { 
                 Position.ChangePosition(columnPosition, rowPosition);
+                return true;
+            }
+            return false;
         }
         protected abstract IChessMoveVerifier MoveVerifier { get; set; }
 

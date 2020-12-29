@@ -11,6 +11,6 @@ namespace ChessLogicLibrary.ChessPieces
         bool wasMoved { get; }
         ColorsEnum Color { get; set; }
         Position Position { get; }
-        void Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
+        bool Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
     }
 }
