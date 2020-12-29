@@ -34,13 +34,13 @@ namespace ChessLogicLibrary.ChessBoardObjects
             return false;
         }
 
-        public ColorsEnum GetPiecesColor(string positionString)
+        public IChessPiece GetAPieceFromPosition(string positionString)
         {
             Position positon = new Position(positionString);
             IChessPiece chessPieceSearched = ChessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == positon.ColumnPosition
                                                                  && cp.Position.RowPosition == positon.RowPosition)
                                                                  .First();
-            return chessPieceSearched.Color;
+            return chessPieceSearched;
         }
     }
 }

@@ -21,7 +21,17 @@ namespace ChessLogicLibrary
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
-            
+            if (chessBoard.GetAPieceFromPosition(startingPositionString).Color == chessTimer.ColorsTurn) return true;
+
+            bool hasAPieceBeenMoved = chessBoard.MoveAPiece(startingPositionString, finalPositionString);
+            if (hasAPieceBeenMoved)
+            {
+                if (!hasGameStarted)
+                    StartGame();
+
+                chessTimer.ChangeTurn();
+            }
+            return hasAPieceBeenMoved;
         }
 
         //ChessBoard cb = new ChessBoard();
