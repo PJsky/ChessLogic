@@ -1,6 +1,7 @@
 ﻿using ChessLogicLibrary.ChessBoardObjects;
 using ChessLogicLibrary.ChessPiecePosition;
 using ChessLogicLibrary.ChessPieces;
+using ChessLogicLibrary.EndGameResults;
 using ChessLogicLibrary.PlayerTurnObjects;
 using ChessLogicLibrary.WinConditionsVerifiers;
 using System;
@@ -14,12 +15,15 @@ namespace ChessLogicLibrary
         IChessBoard chessBoard;
         IChessTimer chessTimer;
         IWinCondition winCondition;
+        IEndGameResult endGameResult;
         bool hasGameStarted = false;
-        public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null, IWinCondition WinCondition = null)
+        public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null, 
+                    IWinCondition WinCondition = null, IEndGameResult EndGameResult = null)
         {
             chessBoard = ChessBoard;
             chessTimer = ChessTimer;
             winCondition = WinCondition;
+            endGameResult = EndGameResult;
         }
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
@@ -45,17 +49,24 @@ namespace ChessLogicLibrary
             hasGameStarted = true;
         }
 
-        //Win condition verifier
+        /// <summary>
+        /// Checks for conditions within injected IWinCondition
+        /// Implement this interface if u wanna create new conditions to win the game
+        /// </summary>
         public void HasGameFinished()
         {
            if(winCondition.Verify() != null)
             EndGame();
         }
 
-        //IEndGameResult
+        /// <summary>
+        /// Executes a function inside injected endGameResult
+        /// Create a class implementing IEndGameResult to do certain logic after the game has finished
+        /// </summary>
         public void EndGame()
         {
-            //Do something when the game ends
+            if(endGameResult != null)
+                endGameResult.FinishGame();
         }
     }
 }
