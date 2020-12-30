@@ -17,15 +17,11 @@ namespace ChessLogicLibrary.ChessBoardObjects
             ChessPiecesOnBoard = CpFactory.GetChessPieces();
         }
 
-        //Add check whether a apiece is inside chessboard
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
             if (!IsWithinBoundaries(startingPositionString) || !IsWithinBoundaries(finalPositionString)) return false;
-            Position startingPosition = new Position(startingPositionString);
             Position finalPosition = new Position(finalPositionString);
-            IChessPiece chessPieceMoved = ChessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == startingPosition.ColumnPosition
-                                                                 && cp.Position.RowPosition == startingPosition.RowPosition)
-                                                                 .First();
+            IChessPiece chessPieceMoved = GetAPieceFromPosition(startingPositionString);
             bool wasPieceMoved = chessPieceMoved.Move(finalPosition.ColumnPosition, finalPosition.RowPosition, ChessPiecesOnBoard);
             if (wasPieceMoved)
             {

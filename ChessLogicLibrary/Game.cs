@@ -2,21 +2,24 @@
 using ChessLogicLibrary.ChessPiecePosition;
 using ChessLogicLibrary.ChessPieces;
 using ChessLogicLibrary.PlayerTurnObjects;
+using ChessLogicLibrary.WinConditionsVerifiers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ChessLogicLibrary
 {
-    public class Game
+    public class Game : IGame
     {
         IChessBoard chessBoard;
         IChessTimer chessTimer;
+        IWinCondition winCondition;
         bool hasGameStarted = false;
-        public Game(IChessBoard ChessBoard, IChessTimer ChessTimer)
+        public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null, IWinCondition WinCondition = null)
         {
             chessBoard = ChessBoard;
             chessTimer = ChessTimer;
+            winCondition = WinCondition;
         }
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
@@ -33,7 +36,7 @@ namespace ChessLogicLibrary
                 }
                 return hasAPieceBeenMoved;
             }
-            return false;          
+            return false;
         }
 
         public void StartGame()
@@ -42,5 +45,17 @@ namespace ChessLogicLibrary
             hasGameStarted = true;
         }
 
+        //Win condition verifier
+        public void HasGameFinished()
+        {
+           if(winCondition.Verify() != null)
+            EndGame();
+        }
+
+        //IEndGameResult
+        public void EndGame()
+        {
+            //Do something when the game ends
+        }
     }
 }
