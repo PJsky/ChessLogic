@@ -17,6 +17,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             if(moveDistance >= Math.Sqrt(8) || moveDistance <= 2f) return false;
             if (chessPiecesList == null || chessPiecesList.Count < 1) return true;
             IChessPiece pieceAtDestination = chessPiecesList.Where(cp => cp.Position.ColumnPosition == finalColumnPosition && cp.Position.RowPosition == finalRowPosition).FirstOrDefault();
+            if (pieceAtDestination == null) return true;
 
             return pieceAtDestination.Color != chessPieceMoved.Color;
         }

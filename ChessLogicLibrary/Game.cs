@@ -28,14 +28,17 @@ namespace ChessLogicLibrary
             endGameResult = EndGameResult;
         }
 
-        public void MakeAMove(string startingPositionString, string finalPositionString)
+        public bool MakeAMove(string startingPositionString, string finalPositionString)
         {
-            MoveAPiece(startingPositionString, finalPositionString);
+            bool hasBeenMoved = MoveAPiece(startingPositionString, finalPositionString);
             HasGameFinished();
+            return hasBeenMoved;
         }
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
         {
+            IChessPiece movedPiece = chessBoard.GetAPieceFromPosition(startingPositionString);
+            if (movedPiece == null) return false;
             if (chessBoard.GetAPieceFromPosition(startingPositionString).Color == chessTimer.ColorsTurn)
             {
                 bool hasAPieceBeenMoved = chessBoard.MoveAPiece(startingPositionString, finalPositionString);

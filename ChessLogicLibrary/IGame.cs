@@ -16,7 +16,7 @@ namespace ChessLogicLibrary
         IPlayer winner { get; set; }
         //void EndGame();
         void HasGameFinished();
-        void MakeAMove(string startingPositionString, string finalPositionString);
+        bool MakeAMove(string startingPositionString, string finalPositionString);
         bool MoveAPiece(string startingPositionString, string finalPositionString);
         void StartGame();
     }

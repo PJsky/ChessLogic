@@ -48,7 +48,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             if(chessPieceMoved.Position.ColumnPosition < finalColumnPosition) direction = RookMovementDirection.Right;
             else if(chessPieceMoved.Position.ColumnPosition > finalColumnPosition)direction = RookMovementDirection.Left;
             else if(chessPieceMoved.Position.RowPosition < finalRowPosition) direction = RookMovementDirection.Up;
-            else if (chessPieceMoved.Position.ColumnPosition > finalColumnPosition) direction = RookMovementDirection.Down;
+            else if (chessPieceMoved.Position.RowPosition > finalRowPosition) direction = RookMovementDirection.Down;
 
             switch (direction)
             {
@@ -82,9 +82,6 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             //If there is no piece in the way or main piece attacks the other allow move
             if (!isPieceInTheWay || isMainAttacking) return false;
             return true;
-
-
-
         }
 
         private enum RookMovementDirection : int

@@ -38,7 +38,7 @@ namespace ChessLogicLibrary.ChessBoardObjects
             Position positon = new Position(positionString);
             IChessPiece chessPieceSearched = ChessPiecesOnBoard.Where(cp => cp.Position.ColumnPosition == positon.ColumnPosition
                                                                  && cp.Position.RowPosition == positon.RowPosition)
-                                                                 .First();
+                                                                 .FirstOrDefault();
             return chessPieceSearched;
         }
 
@@ -46,8 +46,8 @@ namespace ChessLogicLibrary.ChessBoardObjects
         {
             Position position = new Position(positionString);
 
-            bool IsWithinWidthBoundary = position.ColumnPosition < upperRightCorner.ColumnPosition && position.ColumnPosition > 0;
-            bool IsWithinHeightBoundary = position.RowPosition < upperRightCorner.RowPosition && position.RowPosition > 0;
+            bool IsWithinWidthBoundary = position.ColumnPosition <= upperRightCorner.ColumnPosition && position.ColumnPosition > 0;
+            bool IsWithinHeightBoundary = position.RowPosition <= upperRightCorner.RowPosition && position.RowPosition > 0;
 
             return IsWithinWidthBoundary && IsWithinHeightBoundary;
         }
