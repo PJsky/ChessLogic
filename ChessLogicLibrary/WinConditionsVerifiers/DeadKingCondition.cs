@@ -10,10 +10,19 @@ namespace ChessLogicLibrary.WinConditionsVerifiers
     public class DeadKingCondition : IWinCondition
     {
         List<IChessPiece> chessPieces;
+        public IGame Game { get; set; }
         public DeadKingCondition(List<IChessPiece> ChessPieces)
         {
             chessPieces = ChessPieces;
         }
+
+        public DeadKingCondition(IGame game)
+        {
+            Game = game;
+            chessPieces = Game.chessBoard.ChessPiecesOnBoard;
+        }
+
+
 
         public ColorsEnum? Verify()
         {

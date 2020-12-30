@@ -3,6 +3,7 @@ using ChessLogicLibrary.ChessPiecePosition;
 using ChessLogicLibrary.ChessPieces;
 using ChessLogicLibrary.EndGameResults;
 using ChessLogicLibrary.PlayerTurnObjects;
+using ChessLogicLibrary.PlayerTurnObjects.PlayerObjects;
 using ChessLogicLibrary.WinConditionsVerifiers;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,25 @@ namespace ChessLogicLibrary
 {
     public class Game : IGame
     {
-        IChessBoard chessBoard;
-        IChessTimer chessTimer;
-        IWinCondition winCondition;
-        IEndGameResult endGameResult;
+        public IChessBoard chessBoard { get; }
+        public IChessTimer chessTimer { get; }
+        public IWinCondition winCondition { get; set; }
+        public IEndGameResult endGameResult { get; set; }
+        public IPlayer winner { get; set; }
         bool hasGameStarted = false;
-        public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null, 
-                    IWinCondition WinCondition = null, IEndGameResult EndGameResult = null)
+        public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null
+                    ,IWinCondition WinCondition = null, IEndGameResult EndGameResult = null)
         {
             chessBoard = ChessBoard;
             chessTimer = ChessTimer;
             winCondition = WinCondition;
             endGameResult = EndGameResult;
+        }
+
+        public void MakeAMove(string startingPositionString, string finalPositionString)
+        {
+            MoveAPiece(startingPositionString, finalPositionString);
+            HasGameFinished();
         }
 
         public bool MoveAPiece(string startingPositionString, string finalPositionString)
@@ -49,24 +57,23 @@ namespace ChessLogicLibrary
             hasGameStarted = true;
         }
 
-        /// <summary>
-        /// Checks for conditions within injected IWinCondition
-        /// Implement this interface if u wanna create new conditions to win the game
-        /// </summary>
+        // Checks for conditions within injected IWinCondition
+        // Implement this interface if u wanna create new conditions to win the game
         public void HasGameFinished()
         {
-           if(winCondition.Verify() != null)
-            EndGame();
+            var winnerColor = winCondition.Verify();
+            if (winnerColor == ColorsEnum.White) winner = chessTimer.PlayerWhite;
+            else if (winnerColor == ColorsEnum.Black) winner = chessTimer.PlayerBlack;
+            if(winner != null)
+                EndGame();
         }
 
-        /// <summary>
-        /// Executes a function inside injected endGameResult
-        /// Create a class implementing IEndGameResult to do certain logic after the game has finished
-        /// </summary>
-        public void EndGame()
+        // Executes a function inside injected endGameResult
+        // Create a class implementing IEndGameResult to do certain logic after the game has finished
+        private void EndGame()
         {
             if(endGameResult != null)
-                endGameResult.FinishGame();
+                endGameResult.FinishGame(winner);
         }
     }
 }
