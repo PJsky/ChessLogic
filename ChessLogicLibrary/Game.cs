@@ -4,9 +4,11 @@ using ChessLogicLibrary.ChessPieces;
 using ChessLogicLibrary.EndGameResults;
 using ChessLogicLibrary.PlayerTurnObjects;
 using ChessLogicLibrary.PlayerTurnObjects.PlayerObjects;
+using ChessLogicLibrary.PreMoveConditions;
 using ChessLogicLibrary.WinConditionsVerifiers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ChessLogicLibrary
@@ -17,6 +19,7 @@ namespace ChessLogicLibrary
         public IChessTimer chessTimer { get; }
         public IWinCondition winCondition { get; set; }
         public IEndGameResult endGameResult { get; set; }
+        private IPreMoveCondition positionCheckedVerifier = new PositionChecked();
         public IPlayer winner { get; set; }
         bool hasGameStarted = false;
         public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null
@@ -32,7 +35,17 @@ namespace ChessLogicLibrary
         {
             //IMoveCondition.Verify == present a condition that has to be met before moving any piece
             //ex. Can't move if king is checkd ///// Can't move if the move will make your own king checked
-            bool hasBeenMoved = MoveAPiece(startingPositionString, finalPositionString);
+            IChessPiece currentKing = chessBoard.ChessPiecesOnBoard.Where(cp => cp.Name == "King" && cp.Color == chessTimer.ColorsTurn).FirstOrDefault(); 
+            
+            //bool isKingChecked = positionCheckedVerifier.Verify(currentKing.Position, chessBoard.ChessPiecesOnBoard, currentKing.Color);
+            //Check if king will be checked after the current move
+            bool willKingBeChecked = positionCheckedVerifier.VerifyKingPosition(chessBoard.GetAPieceFromPosition(startingPositionString), 
+                                                                                finalPositionString, chessBoard.ChessPiecesOnBoard, chessTimer.ColorsTurn);
+
+            bool hasBeenMoved = false;
+            if(!willKingBeChecked)
+                hasBeenMoved = MoveAPiece(startingPositionString, finalPositionString);
+
             HasGameFinished();
             return hasBeenMoved;
         }
