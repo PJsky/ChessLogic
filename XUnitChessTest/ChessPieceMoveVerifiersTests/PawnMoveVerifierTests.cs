@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using XUnitChessTest.ChessBoardObjectsTests.FakeChessPieceFactories;
 
 namespace XUnitChessTest.ChessPieceMoveVerifiersTests
 {
@@ -112,6 +113,20 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
 
             Assert.True(result1);
             Assert.True(result2);
+        }
+
+        [Fact]
+        public void Verify_MoveBlackWithInvalidData_ReturnsFalse()
+        {
+            IChessPiece pawn = new Pawn(1, 1, 4);
+
+            IChessMoveVerifier pawnMoveVerifier = new PawnMoveVerifier();
+            List<IChessPiece> cpList = new TestingChessPieceFactory().GetChessPieces();
+
+            var result = pawnMoveVerifier.Verify(pawn, 26, 2, cpList);
+            
+
+            Assert.False(result);
         }
 
         [Fact]

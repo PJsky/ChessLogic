@@ -12,5 +12,6 @@ namespace ChessLogicLibrary.ChessPieces
         ColorsEnum Color { get; set; }
         Position Position { get; }
         bool Move(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
+        bool IsMovePossible(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null);
     }
 }

@@ -28,7 +28,7 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
             int horizontalMovement = finalColumnPosition - chessPieceMoved.Position.ColumnPosition;
             //Check if it is a move for a proper pawn
             bool isWhitePawnMove = (verticalMovement == 1 || (verticalMovement == 2 && chessPieceMoved.wasMoved == false)) && horizontalMovement == 0 && chessPieceMoved.Color == ColorsEnum.White;
-            bool isBlackPawnMove = (verticalMovement == -1 || (verticalMovement == -2 && chessPieceMoved.wasMoved == false)) && chessPieceMoved.Color == ColorsEnum.Black;
+            bool isBlackPawnMove = (verticalMovement == -1 || (verticalMovement == -2 && chessPieceMoved.wasMoved == false)) && horizontalMovement == 0 && chessPieceMoved.Color == ColorsEnum.Black;
 
             if (!isWhitePawnMove && !isBlackPawnMove) return false;
 

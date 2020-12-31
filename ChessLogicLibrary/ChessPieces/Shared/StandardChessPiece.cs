@@ -32,6 +32,13 @@ namespace ChessLogicLibrary.ChessPieces
             }
             return false;
         }
+
+        public virtual bool IsMovePossible(int columnPosition, int rowPosition, List<IChessPiece> chessPiecesOnBoard = null)
+        {
+            if (MoveVerifier.Verify(this, columnPosition, rowPosition, chessPiecesOnBoard))return true;
+            return false;
+        }
+
         protected abstract IChessMoveVerifier MoveVerifier { get; set; }
 
     }

@@ -30,6 +30,8 @@ namespace ChessLogicLibrary
 
         public bool MakeAMove(string startingPositionString, string finalPositionString)
         {
+            //IMoveCondition.Verify == present a condition that has to be met before moving any piece
+            //ex. Can't move if king is checkd ///// Can't move if the move will make your own king checked
             bool hasBeenMoved = MoveAPiece(startingPositionString, finalPositionString);
             HasGameFinished();
             return hasBeenMoved;
