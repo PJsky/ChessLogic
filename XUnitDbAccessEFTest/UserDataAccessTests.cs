@@ -5,8 +5,10 @@ using System;
 using Xunit;
 using XUnitDbAccessEFTest.TestingDatabase;
 
+[assembly : CollectionBehavior(DisableTestParallelization = true)]
 namespace XUnitDbAccessEFTest
 {
+    [Collection("SameDbTests")]
     public class UserDataAccessTests
     {
         ITestingDbContext context;
@@ -74,7 +76,7 @@ namespace XUnitDbAccessEFTest
         }
 
         [Fact]
-        public void GetUser_NewUsers_Returns()
+        public void RemoveUser_NewUsers_ReturnsTrueAndGetReturnsNull()
         {
             SetupFull();
 
