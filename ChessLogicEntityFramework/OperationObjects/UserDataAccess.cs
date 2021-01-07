@@ -1,4 +1,5 @@
 ﻿using ChessLogicEntityFramework.DbContextObjects;
+using ChessLogicEntityFramework.Helpers;
 using ChessLogicEntityFramework.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace ChessLogicEntityFramework.OperationObjects
     public class UserDataAccess
     {
         readonly IDbContext context;
+        private PasswordHasher pHasher = new PasswordHasher();
         public UserDataAccess()
         {
             context = new ChessAppContext();
@@ -20,34 +22,28 @@ namespace ChessLogicEntityFramework.OperationObjects
             context = Context;
         }
 
-        public User GetUser(int id)
-        {
-            User user = context.Users.Find(id);
-            return user;
-        } 
-        public User GetUser(string userName)
-        {
-            User user = context.Users.Where(u => u.Name == userName).FirstOrDefault();
-            return user;
-        }
+        public User GetUser(int id) => context.Users.Find(id);
 
-        public List<User> GetUsers(Func<User, bool> filter = null)
-        {
-            List<User> userList = context.Users.Where(filter).ToList();
-            return userList;
-        }
+        public User GetUser(string userName) => context.Users.Where(u => u.Name == userName).FirstOrDefault();
 
-        public bool AddUser(string userName)
+        public List<User> GetUsers(Func<User, bool> filter = null) => context.Users.Where(filter).ToList();
+
+
+        public User AddUser(User user, string password)
         {
-            User newUser = new User();
-            newUser.Name = userName;
-            if (GetUser(userName) == null)
-            { 
-                var user = context.Users.Add(newUser);
-                context.SaveChanges();
-                return true;
-            }
-            return false;
+            if (string.IsNullOrWhiteSpace(password)) throw new Exception("Password cannot be null or whitespace only");
+            if (context.Users.Any(u => u.Name == user.Name)) throw new Exception("Username already taken");
+
+            byte[] passwordHash, passwordSalt;
+            pHasher.CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            context.Users.Add(user);
+            context.SaveChanges();
+
+            return user;
         }
 
         public bool RemoveUser(string userName)

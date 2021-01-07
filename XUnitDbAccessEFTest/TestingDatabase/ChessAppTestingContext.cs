@@ -14,7 +14,7 @@ namespace XUnitDbAccessEFTest.TestingDatabase
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DbChessTesting2;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DbChess3;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

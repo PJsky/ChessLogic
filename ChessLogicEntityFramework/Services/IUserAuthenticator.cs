@@ -5,10 +5,9 @@ using System.Text;
 
 namespace ChessLogicEntityFramework.Services
 {
-    public interface IUserService
+    public interface IUserAuthenticator
     {
         User Authenticate(string email, string password);
-        User Create(User user, string password);
-        User GetById(int id);
+
     };
 }

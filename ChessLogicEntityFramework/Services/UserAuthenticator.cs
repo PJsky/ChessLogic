@@ -8,12 +8,12 @@ using System.Text;
 
 namespace ChessLogicEntityFramework.Services
 {
-    public class UserService : IUserService
+    public class UserAuthenticator : IUserAuthenticator
     {
         private IDbContext context;
         private PasswordHasher pHasher = new PasswordHasher();
 
-        public UserService(IDbContext Context)
+        public UserAuthenticator(IDbContext Context)
         {
             context = Context;
         }

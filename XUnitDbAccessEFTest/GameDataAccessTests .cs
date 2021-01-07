@@ -15,20 +15,27 @@ namespace XUnitDbAccessEFTest
         ITestingDbContext context;
         GameDataAccess gameAccess;
         UserDataAccess userAccess;
-        string playerWhite, playerBlack;
+        User playerWhite, playerBlack;
+        string password;
 
         private void SetupEmpty()
         {
             context = new ChessAppTestingContext();
             gameAccess = new GameDataAccess((IDbContext)context);
             userAccess = new UserDataAccess((IDbContext)context);
-            playerWhite = "playerWhite";
-            playerBlack = "playerBlack";
+
+            playerWhite = new User();
+            playerWhite.Name = "playerWhite";
+
+            playerBlack = new User();
+            playerBlack.Name = "playerBlack";
+
+            password = "123123321";
 
             context.ClearDatabase();
 
-            userAccess.AddUser(playerWhite);
-            userAccess.AddUser(playerBlack);
+            userAccess.AddUser(playerWhite, password);
+            userAccess.AddUser(playerBlack, password);
 
         }
 
@@ -37,16 +44,22 @@ namespace XUnitDbAccessEFTest
             context = new ChessAppTestingContext();
             gameAccess = new GameDataAccess((IDbContext)context);
             userAccess = new UserDataAccess((IDbContext)context);
-            playerWhite = "playerWhite";
-            playerBlack = "playerBlack";
+
+            playerWhite = new User();
+            playerWhite.Name = "playerWhite";
+
+            playerBlack = new User();
+            playerBlack.Name = "playerBlack";
+
+            password = "123123321";
 
             context.ClearDatabase();
 
-            userAccess.AddUser(playerWhite);
-            userAccess.AddUser(playerBlack);
+            userAccess.AddUser(playerWhite, password);
+            userAccess.AddUser(playerBlack, password);
 
-            User playerW = userAccess.GetUser(playerWhite);
-            User playerB = userAccess.GetUser(playerBlack);
+            User playerW = userAccess.GetUser(playerWhite.Name);
+            User playerB = userAccess.GetUser(playerBlack.Name);
 
             gameAccess.AddGame(playerW, playerB);
         }
@@ -72,8 +85,8 @@ namespace XUnitDbAccessEFTest
             Game game = gameAccess.GetGame(1);
 
             Assert.Equal(1, game.ID);
-            Assert.Equal(playerWhite, game.PlayerWhite.Name);
-            Assert.Equal(playerBlack, game.PlayerBlack.Name);
+            Assert.Equal(playerWhite.Name, game.PlayerWhite.Name);
+            Assert.Equal(playerBlack.Name, game.PlayerBlack.Name);
         }
 
         [Fact]
@@ -84,8 +97,8 @@ namespace XUnitDbAccessEFTest
             Game game = gameAccess.GetGames(g => g.ID == 1).FirstOrDefault();
             
             Assert.Equal(1, game.ID);
-            Assert.Equal(playerWhite, game.PlayerWhite.Name);
-            Assert.Equal(playerBlack, game.PlayerBlack.Name);
+            Assert.Equal(playerWhite.Name, game.PlayerWhite.Name);
+            Assert.Equal(playerBlack.Name, game.PlayerBlack.Name);
         }
 
         [Fact]

@@ -13,15 +13,24 @@ namespace XUnitDbAccessEFTest
     {
         ITestingDbContext context;
         UserDataAccess userAccess;
-        string firstUser,secondUser,thirdUser;
+        string password;
+        User firstUser, secondUser, thirdUser;
 
         private void SetupEmpty()
         {
             context = new ChessAppTestingContext();
             userAccess = new UserDataAccess((IDbContext)context);
-            firstUser = "firstUser";
-            secondUser = "secondUser";
-            thirdUser = "thirdUser";
+
+            firstUser = new User();
+            firstUser.Name = "firstUser";
+
+            secondUser = new User();
+            secondUser.Name = "secondUser";
+
+            thirdUser = new User();
+            thirdUser.Name = "thirdUser";
+
+            password = "123123321";
 
             context.ClearDatabase();
         }
@@ -30,15 +39,23 @@ namespace XUnitDbAccessEFTest
         {
             context = new ChessAppTestingContext();
             userAccess = new UserDataAccess((IDbContext)context);
-            firstUser = "firstUser";
-            secondUser = "secondUser";
-            thirdUser = "thirdUser";
+
+            firstUser = new User();
+            firstUser.Name = "firstUser";
+
+            secondUser = new User();
+            secondUser.Name = "secondUser";
+
+            thirdUser = new User();
+            thirdUser.Name = "thirdUser";
+
+            password = "123123321";
 
             context.ClearDatabase();
 
-            userAccess.AddUser(firstUser);
-            userAccess.AddUser(secondUser);
-            userAccess.AddUser(thirdUser);
+            userAccess.AddUser(firstUser, password);
+            userAccess.AddUser(secondUser, password);
+            userAccess.AddUser(thirdUser, password);
         }
         
         [Fact]
@@ -47,9 +64,9 @@ namespace XUnitDbAccessEFTest
             SetupEmpty();
             context.ClearDatabase();
 
-            bool user1added = userAccess.AddUser(firstUser);
-            bool user2added = userAccess.AddUser(secondUser);
-            bool user3added = userAccess.AddUser(thirdUser);
+            bool user1added = userAccess.AddUser(firstUser, password) != null;
+            bool user2added = userAccess.AddUser(secondUser, password) != null;
+            bool user3added = userAccess.AddUser(thirdUser, password) != null;
 
             Assert.True(user1added);
             Assert.True(user2added);
@@ -61,17 +78,17 @@ namespace XUnitDbAccessEFTest
         {
             SetupFull();
 
-            User user1 = userAccess.GetUser(firstUser);
-            User user2 = userAccess.GetUser(secondUser);
-            User user3 = userAccess.GetUser(thirdUser);
+            User user1 = userAccess.GetUser(firstUser.Name);
+            User user2 = userAccess.GetUser(secondUser.Name);
+            User user3 = userAccess.GetUser(thirdUser.Name);
 
-            Assert.Equal(firstUser, user1.Name);
+            Assert.Equal(firstUser.Name, user1.Name);
             Assert.Equal(1, user1.ID);
 
-            Assert.Equal(secondUser, user2.Name);
+            Assert.Equal(secondUser.Name, user2.Name);
             Assert.Equal(2, user2.ID);
 
-            Assert.Equal(thirdUser, user3.Name);
+            Assert.Equal(thirdUser.Name, user3.Name);
             Assert.Equal(3, user3.ID);
         }
 
