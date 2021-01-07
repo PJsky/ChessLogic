@@ -22,12 +22,15 @@ namespace ChessLogicLibrary.ChessGameReplayers
             return ReplayGame(movesList);
         }
 
-        public List<IChessPiece> ReplayGame(List<Move> movesList)
+        public List<IChessPiece> ReplayGame(List<Move> movesList, int? numberOfMoves = null)
         {
-            foreach (Move move in movesList)
+            //If number of moves is not specified make all the moves
+            numberOfMoves = numberOfMoves ?? movesList.Count;
+
+            for(int i =0; i< numberOfMoves; i++)
             {
-                var start = move.StartingPosition.ToString();
-                var finish = move.FinalPosition.ToString();
+                var start = movesList[i].StartingPosition.ToString();
+                var finish = movesList[i].FinalPosition.ToString();
                 bool result = game.MakeAMove(start, finish);
                 if (!result) throw new ArgumentException("Passed invalid move list");
             }
