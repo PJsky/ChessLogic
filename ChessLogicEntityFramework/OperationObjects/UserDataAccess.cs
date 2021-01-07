@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ChessLogicEntityFramework.OperationObjects
 {
-    public class UserDataAccess
+    public class UserDataAccess : IUserDataAccess
     {
         readonly IDbContext context;
         private PasswordHasher pHasher = new PasswordHasher();

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ChessLogicEntityFramework.OperationObjects
 {
-    public class GameDataAccess
+    public class GameDataAccess : IGameDataAccess
     {
         readonly IDbContext context;
         public GameDataAccess()
