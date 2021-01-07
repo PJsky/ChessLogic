@@ -37,5 +37,13 @@ namespace ChessLogicLibrary.ChessPiecePosition
             columnPosition = newColumnPosition;
             rowPosition = newRowPosition;
         }
+
+        public override string ToString()
+        {
+            string columnAsString = ((char)(columnPosition + 64)).ToString();
+            string rowAsString = rowPosition.ToString();
+
+            return columnAsString + rowAsString;
+        }
     }
 }

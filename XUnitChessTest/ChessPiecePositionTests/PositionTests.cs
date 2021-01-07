@@ -28,5 +28,17 @@ namespace XUnitChessTest
             Assert.Equal(finalDestinationColumn, position.ColumnPosition);
             Assert.Equal(finalDestinationRow, position.RowPosition);
         }
+
+        [Theory]
+        [InlineData("B3")]
+        [InlineData("A1")]
+        [InlineData("H8")]
+        [InlineData("Z100")]
+        public void ToString_PassedValidData_ReturnsProperString(string stringPosition)
+        {
+            Position position = new Position(stringPosition);
+
+            Assert.Equal(stringPosition, position.ToString());
+        }
     }
 }

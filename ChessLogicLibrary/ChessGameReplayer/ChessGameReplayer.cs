@@ -8,10 +8,12 @@ namespace ChessLogicLibrary.ChessGameReplayer
 {
     public class ChessGameReplayer
     {
+        private IGame game;
         private List<IChessPiece> chessPieces = new List<IChessPiece>();
-        public ChessGameReplayer(List<IChessPiece> ChessPieces)
+        public ChessGameReplayer(IGame Game)
         {
-            chessPieces = ChessPieces;
+            game = Game;
+            chessPieces = Game.chessBoard.ChessPiecesOnBoard;
         }
 
         public List<IChessPiece> GetReplayedGame(string MovesList)
@@ -21,6 +23,11 @@ namespace ChessLogicLibrary.ChessGameReplayer
         public List<IChessPiece> GetReplayedGame(List<Position> MovesList)
         {
             throw new NotImplementedException();
+        }
+        public List<IChessPiece> GetReplayedGame(List<Move> MovesList)
+        {
+            throw new NotImplementedException();
+
         }
     }
 }
