@@ -11,7 +11,7 @@ namespace ChessLogicLibrary.ChessBoardObjects
     {
         //Has a list of chess pieces with their positions
         public List<IChessPiece> ChessPiecesOnBoard { get; } = new List<IChessPiece>();
-        private readonly Position upperRightCorner = new Position("H8");
+        public Position UpperRightCorner { get; } = new Position("H8");
         public StandardChessBoard(IChessPieceFactory CpFactory)
         {
             ChessPiecesOnBoard = CpFactory.GetChessPieces();
@@ -42,12 +42,12 @@ namespace ChessLogicLibrary.ChessBoardObjects
             return chessPieceSearched;
         }
 
-        private bool IsWithinBoundaries(string positionString)
+        public bool IsWithinBoundaries(string positionString)
         {
             Position position = new Position(positionString);
 
-            bool IsWithinWidthBoundary = position.ColumnPosition <= upperRightCorner.ColumnPosition && position.ColumnPosition > 0;
-            bool IsWithinHeightBoundary = position.RowPosition <= upperRightCorner.RowPosition && position.RowPosition > 0;
+            bool IsWithinWidthBoundary = position.ColumnPosition <= UpperRightCorner.ColumnPosition && position.ColumnPosition > 0;
+            bool IsWithinHeightBoundary = position.RowPosition <= UpperRightCorner.RowPosition && position.RowPosition > 0;
 
             return IsWithinWidthBoundary && IsWithinHeightBoundary;
         }

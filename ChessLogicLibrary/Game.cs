@@ -35,12 +35,12 @@ namespace ChessLogicLibrary
         {
             //IMoveCondition.Verify == present a condition that has to be met before moving any piece
             //ex. Can't move if king is checked ///// Can't move if the move will make your own king checked
-            IChessPiece currentKing = chessBoard.ChessPiecesOnBoard.Where(cp => cp.Name == "King" && cp.Color == chessTimer.ColorsTurn).FirstOrDefault(); 
-            
-            //bool isKingChecked = positionCheckedVerifier.Verify(currentKing.Position, chessBoard.ChessPiecesOnBoard, currentKing.Color);
+            IChessPiece currentKing = chessBoard.ChessPiecesOnBoard.Where(cp => cp.Name == "King" && cp.Color == chessTimer.ColorsTurn).FirstOrDefault();
+
             //Check if king will be checked after the current move
-            bool willKingBeChecked = positionCheckedVerifier.VerifyKingPosition(chessBoard.GetAPieceFromPosition(startingPositionString), 
+            bool willKingBeChecked = positionCheckedVerifier.VerifyKingPosition(chessBoard.GetAPieceFromPosition(startingPositionString),
                                                                                 finalPositionString, chessBoard.ChessPiecesOnBoard, chessTimer.ColorsTurn);
+
             bool hasBeenMoved = false;
             if(!willKingBeChecked)
                 hasBeenMoved = MoveAPiece(startingPositionString, finalPositionString);
