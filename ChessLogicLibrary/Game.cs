@@ -78,6 +78,7 @@ namespace ChessLogicLibrary
         // Implement this interface if u wanna create new conditions to win the game
         public void HasGameFinished()
         {
+            if (winCondition == null) return;
             var winnerColor = winCondition.Verify();
             if (winnerColor == ColorsEnum.White) winner = chessTimer.PlayerWhite;
             else if (winnerColor == ColorsEnum.Black) winner = chessTimer.PlayerBlack;

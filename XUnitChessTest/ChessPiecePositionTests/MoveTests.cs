@@ -37,5 +37,16 @@ namespace XUnitChessTest.ChessPiecePositionTests
             Assert.Equal(4, moveTwo.FinalPosition.RowPosition);
             Assert.Equal(4, moveThree.FinalPosition.RowPosition);
         }
+
+        [Fact]
+        public void MoveStringConstructor_ValidData_BuildProperly()
+        {
+            Move move = new Move("A2:A4");
+
+            Assert.Equal(1, move.StartingPosition.ColumnPosition);
+            Assert.Equal(2, move.StartingPosition.RowPosition);
+            Assert.Equal(1, move.FinalPosition.ColumnPosition);
+            Assert.Equal(4, move.FinalPosition.RowPosition);
+        }
     }
 }
