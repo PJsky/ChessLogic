@@ -13,6 +13,6 @@ namespace ChessLogicEntityFramework.OperationObjects
         bool RemoveGame(int GameId);
         bool ChangePlayers(int gameID, User playerWhite, User playerBlack);
         bool UpdateMoves(int gameID, string Moves);
-        bool AddMovesToList(int gameID, string Move)
+        bool AddMovesToList(int gameID, string Move);
     }
 }
