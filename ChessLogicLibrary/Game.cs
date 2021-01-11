@@ -22,6 +22,7 @@ namespace ChessLogicLibrary
         private IPreMoveCondition positionCheckedVerifier = new PositionChecked();
         public IPlayer winner { get; set; }
         bool hasGameStarted = false;
+        public string GameMovesMade = "";
         public Game(IChessBoard ChessBoard = null, IChessTimer ChessTimer = null
                     ,IWinCondition WinCondition = null, IEndGameResult EndGameResult = null)
         {
@@ -62,6 +63,7 @@ namespace ChessLogicLibrary
                         StartGame();
 
                     chessTimer.ChangeTurn();
+                    GameMovesMade += startingPositionString + ":" + finalPositionString + ";";
                 }
                 return hasAPieceBeenMoved;
             }

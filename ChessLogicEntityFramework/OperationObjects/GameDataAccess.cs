@@ -58,5 +58,37 @@ namespace ChessLogicEntityFramework.OperationObjects
             }
             return false;
         }
+
+        public bool ChangePlayers(int gameID, User playerWhite, User playerBlack)
+        {
+            Game game = GetGame(gameID);
+
+            if (game == null) return false;
+
+            game.PlayerWhite = playerWhite;
+            game.PlayerBlack = playerBlack;
+            context.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateMoves(int gameID, string Moves)
+        {
+            Game game = GetGame(gameID);
+
+            if (game == null) return false;
+
+            game.MovesList = Moves;
+            return true;
+        }
+
+        public bool AddMovesToList(int gameID, string Move)
+        {
+            Game game = GetGame(gameID);
+
+            if (game == null) return false;
+
+            game.MovesList += Move;
+            return true;
+        }
     }
 }

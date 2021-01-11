@@ -11,5 +11,8 @@ namespace ChessLogicEntityFramework.OperationObjects
         List<Game> GetGames(Func<Game, bool> filter = null);
         bool RemoveGame(Game GameToDelete);
         bool RemoveGame(int GameId);
+        bool ChangePlayers(int gameID, User playerWhite, User playerBlack);
+        bool UpdateMoves(int gameID, string Moves);
+        bool AddMovesToList(int gameID, string Move)
     }
 }
