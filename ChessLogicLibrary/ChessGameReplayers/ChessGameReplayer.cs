@@ -17,7 +17,9 @@ namespace ChessLogicLibrary.ChessGameReplayers
 
         public List<IChessPiece> ReplayGame(string movesString)
         {
-            string[] stringMovesArray = movesString.Split(';');
+            if (string.IsNullOrEmpty(movesString)) return null;
+
+            string[] stringMovesArray = movesString.Split(';').Where(s => !string.IsNullOrEmpty(s)).ToArray();
             List<Move> movesList = stringMovesArray.Select(s => new Move(s)).ToList();
             return ReplayGame(movesList);
         }
