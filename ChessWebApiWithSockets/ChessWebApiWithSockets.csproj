@@ -6,11 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ChessLogicEntityFramework\ChessLogicEntityFramework.csproj" />
     <ProjectReference Include="..\ChessLogicLibrary\ChessLogicLibrary.csproj" />
+    <ProjectReference Include="..\ChessSignalRLib\ChessSignalRLibrary.csproj" />
   </ItemGroup>
 
 

@@ -7,6 +7,7 @@ using ChessLogicEntityFramework;
 using ChessLogicEntityFramework.DbContextObjects;
 using ChessLogicEntityFramework.OperationObjects;
 using ChessLogicEntityFramework.Services;
+using ChessSignalRLibrary.GameHubObjects;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,18 @@ namespace ChessWebApiWithSockets
         {
             services.AddDbContext<ChessAppContext>();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy", builder =>
+                {
+                    builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed((host) => true)
+                    .AllowCredentials();
+                });
+            });
+
             services.AddControllers();
 
             //Configure JWT authentication
@@ -72,6 +84,8 @@ namespace ChessWebApiWithSockets
                 };
             });
 
+            services.AddSignalR();
+
             // configure DI for application services
             services.AddScoped<IUserAuthenticator, UserAuthenticator>();
             services.AddScoped<IDbContext, ChessAppContext>();
@@ -82,6 +96,7 @@ namespace ChessWebApiWithSockets
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("MyPolicy");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -95,9 +110,11 @@ namespace ChessWebApiWithSockets
 
             app.UseAuthorization();
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/gameHub");
             });
         }
     }
