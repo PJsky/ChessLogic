@@ -78,6 +78,7 @@ namespace ChessLogicEntityFramework.OperationObjects
             if (game == null) return false;
 
             game.MovesList = Moves;
+            context.SaveChanges();
             return true;
         }
 
@@ -88,6 +89,7 @@ namespace ChessLogicEntityFramework.OperationObjects
             if (game == null) return false;
 
             game.MovesList += Move;
+            context.SaveChanges();
             return true;
         }
     }
