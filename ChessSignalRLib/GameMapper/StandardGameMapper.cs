@@ -1,4 +1,5 @@
-﻿using ChessLogicEntityFramework.OperationObjects;
+﻿using ChessLogicEntityFramework.Models;
+using ChessLogicEntityFramework.OperationObjects;
 using ChessLogicLibrary;
 using ChessLogicLibrary.ChessBoardObjects;
 using ChessLogicLibrary.ChessGameReplayers;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ChessSignalRLibrary.GameMapper
 {
-    public class StandardGameMapper : IStandardGameMapper
+    public class StandardGameMapper : IGameMapper
     {
         private IUserDataAccess userDataAccess;
         public StandardGameMapper(IUserDataAccess UserDataAccess)
@@ -20,12 +21,15 @@ namespace ChessSignalRLibrary.GameMapper
             userDataAccess = UserDataAccess;
         }
 
-        public Game MapDbToGame(ChessLogicEntityFramework.Models.Game gameFromDb)
+        public ChessLogicLibrary.Game MapDbToGame(ChessLogicEntityFramework.Models.Game gameFromDb)
         {
-            var playerWhite = userDataAccess.GetUser(gameFromDb.PlayerWhiteID);
-            var playerBlack = userDataAccess.GetUser(gameFromDb.PlayerBlackID);
+            User playerWhite = null, playerBlack = null;
+            if(gameFromDb.PlayerWhiteID == null)
+                playerWhite = userDataAccess.GetUser((int)gameFromDb.PlayerWhiteID);
+            if(gameFromDb.PlayerBlackID == null)
+                playerBlack = userDataAccess.GetUser((int)gameFromDb.PlayerBlackID);
 
-            var game = new Game(new StandardChessBoard(new StandardChessPieceFactory()),
+            var game = new ChessLogicLibrary.Game(new StandardChessBoard(new StandardChessPieceFactory()),
                                 new StandardChessTimer(new StandardPlayer(playerWhite.Name), new StandardPlayer(playerBlack.Name)));
 
             game.winCondition = new CheckedKingCondition(game);

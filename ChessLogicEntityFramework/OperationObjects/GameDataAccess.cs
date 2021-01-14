@@ -28,7 +28,9 @@ namespace ChessLogicEntityFramework.OperationObjects
 
         public List<Game> GetGames(Func<Game, bool> filter = null)
         {
-            List<Game> GameList = context.Games.Where(filter).ToList();
+            List<Game> GameList = context.Games.ToList();
+            if (filter != null)
+                GameList = GameList.Where(filter).ToList();
             return GameList;
         }
 

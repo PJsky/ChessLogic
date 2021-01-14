@@ -2,7 +2,7 @@
 
 namespace ChessSignalRLibrary.GameMapper
 {
-    public interface IStandardGameMapper
+    public interface IGameMapper
     {
         Game MapDbToGame(ChessLogicEntityFramework.Models.Game game);
     }

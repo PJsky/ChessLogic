@@ -21,8 +21,9 @@ namespace ChessWebApiWithSockets.Helpers
             if (userID == null) return null;
 
             UserPresentationModel user = new UserPresentationModel();
-            user.Name = userDataAccess.GetUser(Int32.Parse(userID)).Name;
-
+            var userFromDb = userDataAccess.GetUser(Int32.Parse(userID));
+            user.Name = userFromDb.Name;
+            user.UserID = userFromDb.ID;
             return user;
         }
     }
