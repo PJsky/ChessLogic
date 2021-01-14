@@ -84,5 +84,26 @@ namespace ChessWebApiWithSockets.Controllers
 
             return Ok(gameModel);
         }
+
+        [HttpPost("quitGame")]
+        public IActionResult QuitGame([FromBody] GameToFindModel gameToFindModel)
+        {
+            var game = gameDataAccess.GetGame(gameToFindModel.GameID);
+            var user = userGetter.GetUserFromClaims(HttpContext);
+            User gamePlayer = userDataAccess.GetUser(user.UserID);
+
+            if (game.PlayerWhiteID != gamePlayer.ID && game.PlayerBlackID != gamePlayer.ID) return BadRequest(new { message = "Can't quit a game u are not in" });
+            if (game.PlayerWhiteID == gamePlayer.ID)
+            {
+                gameDataAccess.ChangePlayers(game.ID, null, game.PlayerBlack);
+            }else if(game.PlayerBlackID == gamePlayer.ID)
+            {
+                gameDataAccess.ChangePlayers(game.ID, game.PlayerWhite, null);
+            }
+
+            GamePresentationModel gameModel = ViewModelMapper.MapGameToPresentation(game);
+
+            return Ok(gameModel);
+        }
     }
 }
