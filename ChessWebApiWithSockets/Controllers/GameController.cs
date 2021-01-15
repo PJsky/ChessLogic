@@ -71,7 +71,7 @@ namespace ChessWebApiWithSockets.Controllers
             User gamePlayer = userDataAccess.GetUser(user.UserID);
 
             if (gamePlayer.ID == game.PlayerBlackID || gamePlayer.ID == game.PlayerWhiteID) return BadRequest("You have already joined the game");
-            if (game.PlayerWhiteID != null || game.PlayerBlackID != null) return BadRequest("Both seats in the game are taken");
+            if (game.PlayerWhiteID != null && game.PlayerBlackID != null) return BadRequest("Both seats in the game are taken");
             if(game.PlayerWhiteID == null) 
             { 
                 gameDataAccess.ChangePlayers(game.ID, gamePlayer, game.PlayerBlack);

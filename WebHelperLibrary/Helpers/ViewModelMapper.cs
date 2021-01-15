@@ -1,4 +1,5 @@
 ﻿using ChessLogicEntityFramework.Models;
+using ChessLogicEntityFramework.OperationObjects;
 using SharedWebObjectsLibrary.ViewModels.GameModels.Response;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace SharedWebObjectsLibrary.Helpers
     {
         public static GamePresentationModel MapGameToPresentation(Game game)
         {
+            UserDataAccess userDataAccess = new UserDataAccess();
             GamePresentationModel gameModel = new GamePresentationModel()
             {
                 GameID = game.ID,
-                PlayerWhite = game.PlayerWhite == null ? null : game.PlayerWhite.Name,
-                PlayerBlack = game.PlayerBlack == null ? null : game.PlayerBlack.Name
+                PlayerWhite = game.PlayerWhiteID == null ? null : userDataAccess.GetUser((int)game.PlayerWhiteID).Name,
+                PlayerBlack = game.PlayerBlackID == null ? null : userDataAccess.GetUser((int)game.PlayerBlackID).Name
             };
             return gameModel;
         }
