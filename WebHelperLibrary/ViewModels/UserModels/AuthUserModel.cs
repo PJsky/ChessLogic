@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChessWebApiWithSockets.ViewModels.UserModels
+namespace SharedWebObjectsLibrary.ViewModels.UserModels
 {
     public class AuthUserModel
     {

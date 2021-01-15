@@ -1,12 +1,12 @@
 ﻿using ChessLogicEntityFramework.OperationObjects;
-using ChessWebApiWithSockets.ViewModels.UserModels;
+using SharedWebObjectsLibrary.ViewModels.UserModels;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChessWebApiWithSockets.Helpers
+namespace SharedWebObjectsLibrary.Helpers
 {
     public class UserGetter
     {

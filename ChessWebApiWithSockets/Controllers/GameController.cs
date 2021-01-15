@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChessLogicEntityFramework.Models;
 using ChessLogicEntityFramework.OperationObjects;
-using ChessWebApiWithSockets.Helpers;
-using ChessWebApiWithSockets.ViewModels.GameModels;
-using ChessWebApiWithSockets.ViewModels.GameModels.Response;
+using SharedWebObjectsLibrary.Helpers;
+using SharedWebObjectsLibrary.ViewModels.GameModels;
+using SharedWebObjectsLibrary.ViewModels.GameModels.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessWebApiWithSockets.Controllers

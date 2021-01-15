@@ -39,5 +39,70 @@ namespace ChessSignalRLibrary.GameHubObjects
                 await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
             }
         }
+
+        private async Task MakeAMove(int gameRoomID, string moveString)
+        {
+            Move move = new Move(moveString);
+            IGameDataAccess gameDataAccess = new GameDataAccess();
+            IUserDataAccess userDataAccess = new UserDataAccess();
+            IGameMapper gameMapper = new StandardGameMapper(userDataAccess);
+            var gameFromDb = gameDataAccess.GetGame(gameRoomID);
+            var game = gameMapper.MapDbToGame(gameFromDb);
+            bool wasMoveMade = game.MakeAMove(move.StartingPosition.ToString(), move.FinalPosition.ToString());
+            if (wasMoveMade)
+            {
+                gameDataAccess.AddMovesToList(gameRoomID, moveString + ";");
+                var serializedBoard = StandardChessBoardSerializer.Serialize(game.chessBoard);
+                await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("ReceiveMessage", "wrong move");
+                var serializedBoard = StandardChessBoardSerializer.Serialize(game.chessBoard);
+                await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
+            }
+        }
+
+        public Task JoinGameGroup(string gameRoomID)
+        {
+            //Check if person is inside the game
+            //Need to create additional table for users in games (anonymous)
+            GameDataAccess gameDataAccess = new GameDataAccess();
+            var game = gameDataAccess.GetGame(Int32.Parse(gameRoomID));
+            if (game == null) return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join a game which does not exist");
+
+            var userID = Context.User.Identity.Name;
+            if (game.PlayerBlackID == Int32.Parse(userID) || game.PlayerWhiteID == Int32.Parse(userID)) {
+
+                Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
+                var gameMapper = new StandardGameMapper(new UserDataAccess());
+                var gameObject = gameMapper.MapDbToGame(game);
+                var serializedBoard = StandardChessBoardSerializer.Serialize(gameObject.chessBoard);
+                return Clients.Caller.SendAsync("ReceiveBoard", serializedBoard);
+            }
+
+            return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join full gameroom");
+        }
+
+        public Task SendMessageToGroup(string gameRoomID, string moveString)
+        {
+            //Need to make one player black/white and recognize it as such
+            GameDataAccess gameDataAccess = new GameDataAccess();
+            var game = gameDataAccess.GetGame(Int32.Parse(gameRoomID));
+            if (game == null) return Clients.Caller.SendAsync("ReceiveMessage", "Tried to Send message to group which does not exist");
+
+            var userID = Context.User.Identity.Name;
+            if (game.PlayerBlackID != Int32.Parse(userID) && game.PlayerWhiteID != Int32.Parse(userID))
+                return Clients.Caller.SendAsync("ReceiveMessage", "Tried to send message to a room which you do not belong to");
+
+            var gameMapper = new StandardGameMapper(new UserDataAccess());
+            var gameObject = gameMapper.MapDbToGame(game);
+            if((gameObject.chessTimer.ColorsTurn == ChessLogicLibrary.ChessPieces.ColorsEnum.White && game.PlayerWhiteID == Int32.Parse(userID)) ||
+               (gameObject.chessTimer.ColorsTurn == ChessLogicLibrary.ChessPieces.ColorsEnum.Black && game.PlayerBlackID == Int32.Parse(userID)))
+            return MakeAMove(Int32.Parse(gameRoomID), moveString);
+
+            return Clients.Caller.SendAsync("ReceiveMessage", "Tried to move on other players turn");
+        }
+
     }
 }

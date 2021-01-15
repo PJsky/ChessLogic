@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitDbAccessEFTest", "XUni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessWebApiWithSockets", "ChessWebApiWithSockets\ChessWebApiWithSockets.csproj", "{F76A1293-CD57-43C2-B991-2D12B96F195D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessSignalRLibrary", "ChessSignalRLib\ChessSignalRLibrary.csproj", "{D28A5282-F57E-4B7C-B47D-59E4889D4C00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChessSignalRLibrary", "ChessSignalRLib\ChessSignalRLibrary.csproj", "{D28A5282-F57E-4B7C-B47D-59E4889D4C00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedWebObjectsLibrary", "WebHelperLibrary\SharedWebObjectsLibrary.csproj", "{E670E8A4-A501-4BEB-8F80-6954B44A655D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D28A5282-F57E-4B7C-B47D-59E4889D4C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D28A5282-F57E-4B7C-B47D-59E4889D4C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D28A5282-F57E-4B7C-B47D-59E4889D4C00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E670E8A4-A501-4BEB-8F80-6954B44A655D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E670E8A4-A501-4BEB-8F80-6954B44A655D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E670E8A4-A501-4BEB-8F80-6954B44A655D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E670E8A4-A501-4BEB-8F80-6954B44A655D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

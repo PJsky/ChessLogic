@@ -24,13 +24,16 @@ namespace ChessSignalRLibrary.GameMapper
         public ChessLogicLibrary.Game MapDbToGame(ChessLogicEntityFramework.Models.Game gameFromDb)
         {
             User playerWhite = null, playerBlack = null;
-            if(gameFromDb.PlayerWhiteID == null)
+            if(gameFromDb.PlayerWhiteID != null)
                 playerWhite = userDataAccess.GetUser((int)gameFromDb.PlayerWhiteID);
-            if(gameFromDb.PlayerBlackID == null)
+            if(gameFromDb.PlayerBlackID != null)
                 playerBlack = userDataAccess.GetUser((int)gameFromDb.PlayerBlackID);
 
+            var playerWhiteName = playerWhite == null ? null : playerWhite.Name;
+            var playerBlackName = playerBlack == null ? null : playerBlack.Name;
+
             var game = new ChessLogicLibrary.Game(new StandardChessBoard(new StandardChessPieceFactory()),
-                                new StandardChessTimer(new StandardPlayer(playerWhite.Name), new StandardPlayer(playerBlack.Name)));
+                                new StandardChessTimer(new StandardPlayer(playerWhiteName), new StandardPlayer(playerBlackName)));
 
             game.winCondition = new CheckedKingCondition(game);
             ChessGameReplayer cgr = new ChessGameReplayer(game);
