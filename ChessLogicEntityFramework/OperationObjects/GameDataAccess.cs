@@ -34,14 +34,14 @@ namespace ChessLogicEntityFramework.OperationObjects
             return GameList;
         }
 
-        public bool AddGame(User playerWhite, User playerBlack)
+        public int AddGame(User playerWhite, User playerBlack)
         {
             Game newGame = new Game();
             newGame.PlayerWhite = playerWhite;
             newGame.PlayerBlack = playerBlack;
-            var Game = context.Games.Add(newGame);
+            context.Games.Add(newGame);
             context.SaveChanges();
-            return true;
+            return newGame.ID;
         }
 
         public bool RemoveGame(int GameId)
@@ -80,6 +80,17 @@ namespace ChessLogicEntityFramework.OperationObjects
             if (game == null) return false;
 
             game.MovesList = Moves;
+            context.SaveChanges();
+            return true;
+        }
+
+        public bool DecideWinner(int gameID, User winner)
+        {
+            Game game = GetGame(gameID);
+            
+            if (game == null) return false;
+
+            game.Winner = winner;
             context.SaveChanges();
             return true;
         }

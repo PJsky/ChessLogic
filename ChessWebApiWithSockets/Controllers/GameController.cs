@@ -47,7 +47,32 @@ namespace ChessWebApiWithSockets.Controllers
         [HttpGet("getFreeGames")]
         public IActionResult GetFreeGames()
         {
-            var games = gameDataAccess.GetGames(g => g.PlayerBlackID == null || g.PlayerWhiteID == null);
+            var user = userGetter.GetUserFromClaims(HttpContext);
+            User gamePlayer = null;
+            List<Game> games = new List<Game>();
+            if (user != null)
+            {
+                gamePlayer = userDataAccess.GetUser(user.UserID);
+                games = gameDataAccess.GetGames(g => g.Winner == null ||
+                                                g.PlayerBlackID == null || g.PlayerWhiteID == null ||
+                                                g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID);
+            }
+            else if(user == null)
+                games= gameDataAccess.GetGames(g => g.PlayerBlackID == null || g.PlayerWhiteID == null);
+
+            var gamesModels = games.Select(g => ViewModelMapper.MapGameToPresentation(g));
+            return Ok(gamesModels);
+        }
+
+        [HttpGet("getMatchHistory")]
+        public IActionResult GetMatchHistory()
+        {
+            var user = userGetter.GetUserFromClaims(HttpContext);
+            if (user == null) return BadRequest("U are not logged in");
+            List<Game> games = new List<Game>();
+            User gamePlayer = userDataAccess.GetUser(user.UserID);
+            games = gameDataAccess.GetGames(g => (g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID) && g.Winner != null);
+
             var gamesModels = games.Select(g => ViewModelMapper.MapGameToPresentation(g));
             return Ok(gamesModels);
         }
@@ -59,8 +84,8 @@ namespace ChessWebApiWithSockets.Controllers
             var user = userGetter.GetUserFromClaims(HttpContext);
             User gamePlayer = userDataAccess.GetUser(user.UserID);
 
-            gameDataAccess.AddGame(gamePlayer, null);
-            return Ok(new { message = "new game has been created" });
+            var game = gameDataAccess.AddGame(gamePlayer, null);
+            return Ok(new { message = "new game has been created", gameID =  game});
         }
 
         [HttpPost("joinGame")]
@@ -81,7 +106,6 @@ namespace ChessWebApiWithSockets.Controllers
             }
 
             GamePresentationModel gameModel = ViewModelMapper.MapGameToPresentation(game);
-
             return Ok(gameModel);
         }
 

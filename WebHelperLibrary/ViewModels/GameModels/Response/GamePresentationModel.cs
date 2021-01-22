@@ -10,5 +10,6 @@ namespace SharedWebObjectsLibrary.ViewModels.GameModels.Response
         public int GameID { get; set; }
         public string PlayerWhite { get; set; }
         public string PlayerBlack { get; set; }
+        public string MovesList { get; set; }
     }
 }

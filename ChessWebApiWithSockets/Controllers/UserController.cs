@@ -14,6 +14,7 @@ using SharedWebObjectsLibrary.ViewModels.UserModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChessWebApiWithSockets.Controllers
 {
@@ -42,6 +43,7 @@ namespace ChessWebApiWithSockets.Controllers
             return Ok(new
             {
                 ID = user.ID,
+                Username = user.Name,
                 Token = token
             });
         }
@@ -63,12 +65,17 @@ namespace ChessWebApiWithSockets.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetUser()
         {
             var x = new UserGetter(userDataAccess);
             var user = x.GetUserFromClaims(HttpContext);
 
-            return Ok(user);
+            return Ok(new
+            {
+                username = user.Name,
+                userID = user.UserID
+            });
         }
 
     }

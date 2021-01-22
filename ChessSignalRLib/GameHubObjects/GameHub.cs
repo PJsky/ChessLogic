@@ -47,7 +47,16 @@ namespace ChessSignalRLibrary.GameHubObjects
             IUserDataAccess userDataAccess = new UserDataAccess();
             IGameMapper gameMapper = new StandardGameMapper(userDataAccess);
             var gameFromDb = gameDataAccess.GetGame(gameRoomID);
+
+            if (gameFromDb.Winner != null) {
+                await Clients.All.SendAsync("ReceiveMessage", "the winner is: " + gameFromDb.Winner.ID);
+                return; 
+            }
+
             var game = gameMapper.MapDbToGame(gameFromDb);
+
+
+
             bool wasMoveMade = game.MakeAMove(move.StartingPosition.ToString(), move.FinalPosition.ToString());
             if (wasMoveMade)
             {
@@ -61,6 +70,11 @@ namespace ChessSignalRLibrary.GameHubObjects
                 var serializedBoard = StandardChessBoardSerializer.Serialize(game.chessBoard);
                 await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
             }
+
+            if (game.winner != null) { 
+                await Clients.All.SendAsync("ReceiveMessage", "the winner is: " + game.winner.Name);
+                gameDataAccess.DecideWinner(gameFromDb.ID,userDataAccess.GetUser(game.winner.Name));
+            }
         }
 
         public Task JoinGameGroup(string gameRoomID)
@@ -72,6 +86,7 @@ namespace ChessSignalRLibrary.GameHubObjects
             if (game == null) return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join a game which does not exist");
 
             var userID = Context.User.Identity.Name;
+            if (userID == null) return Clients.Caller.SendAsync("You are not logged in");
             if (game.PlayerBlackID == Int32.Parse(userID) || game.PlayerWhiteID == Int32.Parse(userID)) {
 
                 Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
