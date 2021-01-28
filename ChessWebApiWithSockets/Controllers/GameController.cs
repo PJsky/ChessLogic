@@ -25,10 +25,11 @@ namespace ChessWebApiWithSockets.Controllers
             userGetter = new UserGetter(userDataAccess);
         }
 
-        [HttpGet("getGame")]
-        public IActionResult GetGame([FromBody] GameToFindModel gameToFindModel)
+        [HttpGet("getGame/{id}")]
+        public IActionResult GetGame(int? id)
         {
-            var game = gameDataAccess.GetGame(gameToFindModel.GameID);
+            if(id == null) return BadRequest("No such game found");
+            var game = gameDataAccess.GetGame((int)id);
             if (game == null) return BadRequest("No such game found");
 
             GamePresentationModel gameModel = ViewModelMapper.MapGameToPresentation(game);
@@ -53,9 +54,9 @@ namespace ChessWebApiWithSockets.Controllers
             if (user != null)
             {
                 gamePlayer = userDataAccess.GetUser(user.UserID);
-                games = gameDataAccess.GetGames(g => g.Winner == null ||
+                games = gameDataAccess.GetGames(g => g.Winner == null && (
                                                 g.PlayerBlackID == null || g.PlayerWhiteID == null ||
-                                                g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID);
+                                                g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID));
             }
             else if(user == null)
                 games= gameDataAccess.GetGames(g => g.PlayerBlackID == null || g.PlayerWhiteID == null);
@@ -71,7 +72,7 @@ namespace ChessWebApiWithSockets.Controllers
             if (user == null) return BadRequest("U are not logged in");
             List<Game> games = new List<Game>();
             User gamePlayer = userDataAccess.GetUser(user.UserID);
-            games = gameDataAccess.GetGames(g => (g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID) && g.Winner != null);
+            games = gameDataAccess.GetGames(g => (g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID) && g.WinnerID != null);
 
             var gamesModels = games.Select(g => ViewModelMapper.MapGameToPresentation(g));
             return Ok(gamesModels);
@@ -95,7 +96,7 @@ namespace ChessWebApiWithSockets.Controllers
             var user = userGetter.GetUserFromClaims(HttpContext);
             User gamePlayer = userDataAccess.GetUser(user.UserID);
 
-            if (gamePlayer.ID == game.PlayerBlackID || gamePlayer.ID == game.PlayerWhiteID) return BadRequest("You have already joined the game");
+            if (gamePlayer.ID == game.PlayerBlackID || gamePlayer.ID == game.PlayerWhiteID) return Ok("You have already joined the game");
             if (game.PlayerWhiteID != null && game.PlayerBlackID != null) return BadRequest("Both seats in the game are taken");
             if(game.PlayerWhiteID == null) 
             { 

@@ -18,6 +18,11 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
 
         public bool IsShortMove(IChessPiece chessPieceMoved, int finalColumnPosition, int finalRowPosition)
         {
+            //Check if it actually moves
+            if (chessPieceMoved.Position.ColumnPosition == finalColumnPosition
+                && chessPieceMoved.Position.RowPosition == finalRowPosition)
+                return false;
+
             ClosestChessPieceComparer closestChessPieceComparer = new ClosestChessPieceComparer(chessPieceMoved);
             //Check distance between current location and destination
             var distance = closestChessPieceComparer.FloatCompare(new King(0, finalColumnPosition, finalRowPosition), chessPieceMoved);

@@ -86,5 +86,16 @@ namespace XUnitChessTest.ChessPieceMoveVerifiersTests
 
             Assert.False(result);
         }
+
+        [Fact]
+        public void Verify_BishopMovesInPlace_ReturnsFalse()
+        {
+            IChessPiece bishop = new Bishop(0, 5, 5);
+            IChessMoveVerifier bishopMoveVerifier = new BishopMoveVerifier();
+
+            var result = bishopMoveVerifier.Verify(bishop, 5, 5);
+
+            Assert.False(result);
+        }
     }
 }

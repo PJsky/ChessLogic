@@ -72,8 +72,9 @@ namespace XUnitDbAccessEFTest
             User playerWhite = userAccess.GetUser(1);
             User playerBlack = userAccess.GetUser(2);
 
-            bool result = gameAccess.AddGame(playerWhite, playerBlack);
-            
+            int gameID = gameAccess.AddGame(playerWhite, playerBlack);
+            bool result = gameAccess.GetGame(gameID) != null;
+
             Assert.True(result);
         }
 

@@ -25,6 +25,11 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
         private bool IsBishopMovement(IChessPiece chessPieceMoved,
                                       int finalColumnPosition, int finalRowPosition)
         {
+            //Check if it actually moves
+            if (chessPieceMoved.Position.ColumnPosition == finalColumnPosition 
+                && chessPieceMoved.Position.RowPosition == finalRowPosition) 
+                return false;
+
             var horizontalMovement = Math.Abs(chessPieceMoved.Position.ColumnPosition - finalColumnPosition);
             var verticalMovement = Math.Abs(chessPieceMoved.Position.RowPosition - finalRowPosition);
 

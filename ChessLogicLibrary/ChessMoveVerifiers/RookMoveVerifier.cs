@@ -25,6 +25,11 @@ namespace ChessLogicLibrary.ChessMoveVerifiers
         private bool IsRookMovement(IChessPiece chessPieceMoved,
                                       int finalColumnPosition, int finalRowPosition)
         {
+            //Check if it actually moves
+            if (chessPieceMoved.Position.ColumnPosition == finalColumnPosition
+                && chessPieceMoved.Position.RowPosition == finalRowPosition)
+                return false;
+
             var hasMovedHorizontally = chessPieceMoved.Position.ColumnPosition != finalColumnPosition;
             var hasMovedVertically = chessPieceMoved.Position.RowPosition != finalRowPosition;
 

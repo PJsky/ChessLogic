@@ -12,6 +12,7 @@ namespace ChessLogicEntityFramework.Models
         public int? PlayerBlackID { get; set; }
         public User PlayerBlack { get; set; }
         public User Winner { get; set; }
+        public int? WinnerID { get; set; }
         public string MovesList { get; set; }
     }
 }

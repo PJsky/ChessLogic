@@ -1,6 +1,7 @@
 ﻿using ChessLogicEntityFramework.OperationObjects;
 using ChessLogicLibrary.ChessBoardSerializers;
 using ChessLogicLibrary.ChessPiecePosition;
+using ChessLogicLibrary.ChessPieces;
 using ChessSignalRLibrary.GameMapper;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -49,7 +50,7 @@ namespace ChessSignalRLibrary.GameHubObjects
             var gameFromDb = gameDataAccess.GetGame(gameRoomID);
 
             if (gameFromDb.Winner != null) {
-                await Clients.All.SendAsync("ReceiveMessage", "the winner is: " + gameFromDb.Winner.ID);
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveMessage", "the winner is: " + gameFromDb.Winner.ID);
                 return; 
             }
 
@@ -62,17 +63,19 @@ namespace ChessSignalRLibrary.GameHubObjects
             {
                 gameDataAccess.AddMovesToList(gameRoomID, moveString + ";");
                 var serializedBoard = StandardChessBoardSerializer.Serialize(game.chessBoard);
-                await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
+                await Clients.Group("gameRoom_"+gameFromDb.ID).SendAsync("ReceiveBoard", serializedBoard);
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveTurn",
+                new { lastTurnMove = gameFromDb.MovesList.Substring(gameFromDb.MovesList.Length - 6) });
             }
             else
             {
                 await Clients.Caller.SendAsync("ReceiveMessage", "wrong move");
                 var serializedBoard = StandardChessBoardSerializer.Serialize(game.chessBoard);
-                await Clients.All.SendAsync("ReceiveBoard", serializedBoard);
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveBoard", serializedBoard);
             }
 
             if (game.winner != null) { 
-                await Clients.All.SendAsync("ReceiveMessage", "the winner is: " + game.winner.Name);
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveWinner", game.winner.Name);
                 gameDataAccess.DecideWinner(gameFromDb.ID,userDataAccess.GetUser(game.winner.Name));
             }
         }
@@ -93,6 +96,10 @@ namespace ChessSignalRLibrary.GameHubObjects
                 var gameMapper = new StandardGameMapper(new UserDataAccess());
                 var gameObject = gameMapper.MapDbToGame(game);
                 var serializedBoard = StandardChessBoardSerializer.Serialize(gameObject.chessBoard);
+                Clients.Caller.SendAsync("ReceivePlayers", new { p1 = gameObject.chessTimer.PlayerWhite.Name, p2 = gameObject.chessTimer.PlayerBlack.Name });
+                if(game.MovesList != null && game.MovesList.Length >= 6)
+                Clients.Caller.SendAsync("ReceiveTurn", 
+                    new { lastTurnMove = game.MovesList.Substring(game.MovesList.Length-6)});
                 return Clients.Caller.SendAsync("ReceiveBoard", serializedBoard);
             }
 
@@ -112,8 +119,8 @@ namespace ChessSignalRLibrary.GameHubObjects
 
             var gameMapper = new StandardGameMapper(new UserDataAccess());
             var gameObject = gameMapper.MapDbToGame(game);
-            if((gameObject.chessTimer.ColorsTurn == ChessLogicLibrary.ChessPieces.ColorsEnum.White && game.PlayerWhiteID == Int32.Parse(userID)) ||
-               (gameObject.chessTimer.ColorsTurn == ChessLogicLibrary.ChessPieces.ColorsEnum.Black && game.PlayerBlackID == Int32.Parse(userID)))
+            if((gameObject.chessTimer.ColorsTurn == ColorsEnum.White && game.PlayerWhiteID == Int32.Parse(userID)) ||
+               (gameObject.chessTimer.ColorsTurn == ColorsEnum.Black && game.PlayerBlackID == Int32.Parse(userID)))
             return MakeAMove(Int32.Parse(gameRoomID), moveString);
 
             return Clients.Caller.SendAsync("ReceiveMessage", "Tried to move on other players turn");
