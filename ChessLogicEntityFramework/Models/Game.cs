@@ -14,5 +14,7 @@ namespace ChessLogicEntityFramework.Models
         public User Winner { get; set; }
         public int? WinnerID { get; set; }
         public string MovesList { get; set; }
+        public bool IsFinished { get; set; }
+        public ICollection<UserGames> UserGames {get; set;}
     }
 }

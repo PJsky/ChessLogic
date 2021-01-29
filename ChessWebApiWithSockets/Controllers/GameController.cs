@@ -54,7 +54,7 @@ namespace ChessWebApiWithSockets.Controllers
             if (user != null)
             {
                 gamePlayer = userDataAccess.GetUser(user.UserID);
-                games = gameDataAccess.GetGames(g => g.Winner == null && (
+                games = gameDataAccess.GetGames(g => g.Winner == null && g.IsFinished != true &&(
                                                 g.PlayerBlackID == null || g.PlayerWhiteID == null ||
                                                 g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID));
             }

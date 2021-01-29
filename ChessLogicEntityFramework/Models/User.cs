@@ -10,5 +10,7 @@ namespace ChessLogicEntityFramework.Models
         public string Name { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public ICollection<UserGames> UserGames { get; set; }
+
     }
 }

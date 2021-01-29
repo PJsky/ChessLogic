@@ -10,6 +10,7 @@ namespace ChessLogicEntityFramework
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<UserGames> UserGames {get; set;}
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -24,6 +25,20 @@ namespace ChessLogicEntityFramework
 
             modelBuilder.Entity<Game>()
                 .HasKey(g => g.ID);
+
+            modelBuilder.Entity<UserGames>()
+                .HasKey(ug => new { ug.UserID, ug.GameID });
+
+            modelBuilder.Entity<UserGames>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserGames)
+                .HasForeignKey(ug => ug.UserID);
+
+            modelBuilder.Entity<UserGames>()
+                .HasOne(ug => ug.Game)
+                .WithMany(g => g.UserGames)
+                .HasForeignKey(ug => ug.GameID);
+
         }
         public Task<int> SaveChangesAsync()
         {

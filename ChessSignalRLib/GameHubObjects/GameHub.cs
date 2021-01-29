@@ -186,6 +186,10 @@ namespace ChessSignalRLibrary.GameHubObjects
             //if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
             //    gameDataAccess.RemoveGame(gameFromDb);
 
+            if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
+                gameDataAccess.FinishGame(gameFromDb.ID);
+
+
             Clients.Group("gameRoom_" + connection.GameRoomID).SendAsync("ReceivePlayers", 
                 new { 
                     p1 = gameFromDb.PlayerWhite!=null? gameFromDb.PlayerWhite.Name : null, 

@@ -36,6 +36,15 @@ namespace ChessLogicEntityFramework.OperationObjects
             return GameList;
         }
 
+        public List<Game> GetUserGames(int userID, Func<Game,bool> filter = null)
+        {
+            var usersGamesIDs = context.UserGames.Where(ug => ug.UserID == userID).Select(ug => ug.GameID);
+            List<Game> UsersGames = context.Games.Where(g => usersGamesIDs.Contains(g.ID)).ToList();
+            if (filter != null)
+                UsersGames = UsersGames.Where(filter).ToList();
+            return UsersGames;
+        }
+
         public int AddGame(User playerWhite, User playerBlack)
         {
             Game newGame = new Game();
@@ -97,6 +106,16 @@ namespace ChessLogicEntityFramework.OperationObjects
             return true;
         }
 
+        public bool FinishGame(int gameID)
+        {
+            Game game = GetGame(gameID);
+
+            if (game == null) return false;
+            game.IsFinished = true;
+            context.SaveChanges();
+            return true;
+        }
+
         public bool AddMovesToList(int gameID, string Move)
         {
             Game game = GetGame(gameID);
@@ -104,6 +123,17 @@ namespace ChessLogicEntityFramework.OperationObjects
             if (game == null) return false;
 
             game.MovesList += Move;
+            context.SaveChanges();
+            return true;
+        }
+
+        public bool SaveGame(int userID,int gameID)
+        {
+            if (context.UserGames.Any(ug => ug.UserID == userID && ug.GameID == gameID)) return false;
+            UserGames userGame = new UserGames();
+            userGame.UserID = userID;
+            userGame.GameID = gameID;
+            context.UserGames.Add(userGame);
             context.SaveChanges();
             return true;
         }

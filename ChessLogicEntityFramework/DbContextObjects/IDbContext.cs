@@ -11,6 +11,7 @@ namespace ChessLogicEntityFramework.DbContextObjects
     {
         DbSet<User> Users { get; set; }
         DbSet<Game> Games { get; set; }
+        DbSet<UserGames> UserGames { get; set; }
         int SaveChanges();
         Task<int> SaveChangesAsync();
 
