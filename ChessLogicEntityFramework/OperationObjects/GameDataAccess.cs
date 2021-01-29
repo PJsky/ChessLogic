@@ -23,6 +23,8 @@ namespace ChessLogicEntityFramework.OperationObjects
         public Game GetGame(int id)
         {
             Game Game = context.Games.Find(id);
+            Game.PlayerBlack = context.Users.Where(u => u.ID == Game.PlayerBlackID).FirstOrDefault();
+            Game.PlayerWhite = context.Users.Where(u => u.ID == Game.PlayerWhiteID).FirstOrDefault();
             return Game;
         }
 

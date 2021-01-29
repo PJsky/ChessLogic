@@ -98,13 +98,13 @@ namespace ChessWebApiWithSockets.Controllers
 
             if (gamePlayer.ID == game.PlayerBlackID || gamePlayer.ID == game.PlayerWhiteID) return Ok("You have already joined the game");
             if (game.PlayerWhiteID != null && game.PlayerBlackID != null) return BadRequest("Both seats in the game are taken");
-            if(game.PlayerWhiteID == null) 
-            { 
-                gameDataAccess.ChangePlayers(game.ID, gamePlayer, game.PlayerBlack);
-            }else if(game.PlayerBlackID == null)
-            {
-                gameDataAccess.ChangePlayers(game.ID, game.PlayerWhite, gamePlayer);
-            }
+            //if(game.PlayerWhiteID == null) 
+            //{ 
+            //    gameDataAccess.ChangePlayers(game.ID, gamePlayer, game.PlayerBlack);
+            //}else if(game.PlayerBlackID == null)
+            //{
+            //    gameDataAccess.ChangePlayers(game.ID, game.PlayerWhite, gamePlayer);
+            //}
 
             GamePresentationModel gameModel = ViewModelMapper.MapGameToPresentation(game);
             return Ok(gameModel);

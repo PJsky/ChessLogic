@@ -3,9 +3,12 @@ using ChessLogicLibrary.ChessBoardSerializers;
 using ChessLogicLibrary.ChessPiecePosition;
 using ChessLogicLibrary.ChessPieces;
 using ChessSignalRLibrary.GameMapper;
+using ChessSignalRLibrary.GameUserDictonary;
+using ChessSignalRLibrary.WSModels;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +16,9 @@ namespace ChessSignalRLibrary.GameHubObjects
 {
     public class GameHub : Hub
     {
+        //Dictionary<string, string> dict = GameHubDictionary.Get();
+        List<ConnectedUserGroup> connectionList = GameHubDictionary.connectionList;
+
         public async Task SendMessageToAll(string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", message);
@@ -90,19 +96,41 @@ namespace ChessSignalRLibrary.GameHubObjects
 
             var userID = Context.User.Identity.Name;
             if (userID == null) return Clients.Caller.SendAsync("You are not logged in");
+            if (game.PlayerWhiteID == null && game.PlayerBlackID != Int32.Parse(userID))
+            {
+                UserDataAccess userDataAccess = new UserDataAccess();
+                var user = userDataAccess.GetUser(Int32.Parse(userID));
+                gameDataAccess.ChangePlayers(game.ID, user, game.PlayerBlack);
+            }
+            else if (game.PlayerBlackID == null && game.PlayerWhiteID != Int32.Parse(userID))
+            {
+                UserDataAccess userDataAccess = new UserDataAccess();
+                var user = userDataAccess.GetUser(Int32.Parse(userID));
+                gameDataAccess.ChangePlayers(game.ID, game.PlayerWhite, user);
+            }
             if (game.PlayerBlackID == Int32.Parse(userID) || game.PlayerWhiteID == Int32.Parse(userID)) {
 
                 Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
+
+                //dict.Add(Context.ConnectionId, "gameRoom_" + gameRoomID);
+                connectionList.RemoveAll(c => c.ConnectionID == Context.ConnectionId || c.UserID == Int32.Parse(userID));
+                connectionList.Add(new ConnectedUserGroup
+                {
+                    ConnectionID = Context.ConnectionId,
+                    UserID = Int32.Parse(userID),
+                    GameRoomID = Int32.Parse(gameRoomID)
+                });
+
                 var gameMapper = new StandardGameMapper(new UserDataAccess());
                 var gameObject = gameMapper.MapDbToGame(game);
                 var serializedBoard = StandardChessBoardSerializer.Serialize(gameObject.chessBoard);
-                Clients.Caller.SendAsync("ReceivePlayers", new { p1 = gameObject.chessTimer.PlayerWhite.Name, p2 = gameObject.chessTimer.PlayerBlack.Name });
+                Clients.Group("gameRoom_" + gameRoomID).SendAsync("ReceivePlayers", new { p1 = gameObject.chessTimer.PlayerWhite.Name, p2 = gameObject.chessTimer.PlayerBlack.Name });
                 if(game.MovesList != null && game.MovesList.Length >= 6)
                 Clients.Caller.SendAsync("ReceiveTurn", 
                     new { lastTurnMove = game.MovesList.Substring(game.MovesList.Length-6)});
                 return Clients.Caller.SendAsync("ReceiveBoard", serializedBoard);
             }
-
+            
             return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join full gameroom");
         }
 
@@ -126,5 +154,44 @@ namespace ChessSignalRLibrary.GameHubObjects
             return Clients.Caller.SendAsync("ReceiveMessage", "Tried to move on other players turn");
         }
 
+        public override Task OnConnectedAsync()
+        {
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            Clients.All.SendAsync("ReceiveMessage", "disconnected: " + Context.ConnectionId);
+            QuitGroups();
+
+            Console.WriteLine(connectionList);
+            return base.OnDisconnectedAsync(exception);
+        }
+
+
+        public Task QuitGroups()
+        {
+            GameDataAccess gameDataAccess = new GameDataAccess();
+            var connection = connectionList.Where(con => con.ConnectionID == Context.ConnectionId).FirstOrDefault();
+            if (connection == null) return Clients.Caller.SendAsync("ReceiveMessage", "Not conneted to any");
+            var gameFromDb = gameDataAccess.GetGame(connection.GameRoomID);
+            connectionList.RemoveAll(con => con.ConnectionID == Context.ConnectionId);
+
+            if (gameFromDb.PlayerWhiteID == connection.UserID)
+                gameDataAccess.ChangePlayers(gameFromDb.ID, null, gameFromDb.PlayerBlack);
+
+            else if (gameFromDb.PlayerBlackID == connection.UserID)
+                gameDataAccess.ChangePlayers(gameFromDb.ID, gameFromDb.PlayerWhite, null);
+
+            //if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
+            //    gameDataAccess.RemoveGame(gameFromDb);
+
+            Clients.Group("gameRoom_" + connection.GameRoomID).SendAsync("ReceivePlayers", 
+                new { 
+                    p1 = gameFromDb.PlayerWhite!=null? gameFromDb.PlayerWhite.Name : null, 
+                    p2 = gameFromDb.PlayerBlack != null ? gameFromDb.PlayerBlack.Name : null
+                });
+            return Clients.Caller.SendAsync("ReceiveMessage", "You were remvoed from all groups");
+        }
     }
 }
