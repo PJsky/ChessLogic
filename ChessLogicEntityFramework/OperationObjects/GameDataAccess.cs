@@ -106,6 +106,13 @@ namespace ChessLogicEntityFramework.OperationObjects
             return true;
         }
 
+        public bool DecideWinner(int gameID, int userID)
+        {
+            User user = context.Users.Find(userID);
+
+            return DecideWinner(gameID, user);
+        }
+
         public bool FinishGame(int gameID)
         {
             Game game = GetGame(gameID);

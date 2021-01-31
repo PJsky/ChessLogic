@@ -18,6 +18,7 @@ namespace ChessLogicEntityFramework.OperationObjects
         bool AddMovesToList(int gameID, string Move);
         bool SaveGame(int userID, int gameID);
         bool DecideWinner(int gameID, User winner);
+        bool DecideWinner(int gameID, int userID);
         bool FinishGame(int gameID);
 
     }
