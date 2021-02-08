@@ -16,6 +16,7 @@ namespace ChessLogicEntityFramework.Models
         public string MovesList { get; set; }
         public bool IsFinished { get; set; }
         public ICollection<UserGames> UserGames {get; set;}
-
+        public int GameTime { get; set; }
+        public int TimeGain { get; set; }
     }
 }

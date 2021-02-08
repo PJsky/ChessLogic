@@ -4,14 +4,16 @@ using ChessLogicEntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ChessLogicEntityFramework.Migrations
 {
     [DbContext(typeof(ChessAppContext))]
-    partial class ChessAppContextModelSnapshot : ModelSnapshot
+    [Migration("20210202120424_friends basic")]
+    partial class friendsbasic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,16 +23,23 @@ namespace ChessLogicEntityFramework.Migrations
 
             modelBuilder.Entity("ChessLogicEntityFramework.Models.Friendship", b =>
                 {
-                    b.Property<int>("User1ID")
+                    b.Property<int>("User1")
                         .HasColumnType("int");
 
-                    b.Property<int>("User2ID")
+                    b.Property<int>("User2")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("isAccepted")
-                        .HasColumnType("bit");
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
 
-                    b.HasKey("User1ID", "User2ID");
+                    b.Property<int?>("UserID1")
+                        .HasColumnType("int");
+
+                    b.HasKey("User1", "User2");
+
+                    b.HasIndex("UserID");
+
+                    b.HasIndex("UserID1");
 
                     b.ToTable("Friendships");
                 });
@@ -110,6 +119,17 @@ namespace ChessLogicEntityFramework.Migrations
                     b.ToTable("UserGames");
                 });
 
+            modelBuilder.Entity("ChessLogicEntityFramework.Models.Friendship", b =>
+                {
+                    b.HasOne("ChessLogicEntityFramework.Models.User", null)
+                        .WithMany("Users1Friendships")
+                        .HasForeignKey("UserID");
+
+                    b.HasOne("ChessLogicEntityFramework.Models.User", null)
+                        .WithMany("Users2Friendships")
+                        .HasForeignKey("UserID1");
+                });
+
             modelBuilder.Entity("ChessLogicEntityFramework.Models.Game", b =>
                 {
                     b.HasOne("ChessLogicEntityFramework.Models.User", "PlayerBlack")
@@ -158,6 +178,10 @@ namespace ChessLogicEntityFramework.Migrations
             modelBuilder.Entity("ChessLogicEntityFramework.Models.User", b =>
                 {
                     b.Navigation("UserGames");
+
+                    b.Navigation("Users1Friendships");
+
+                    b.Navigation("Users2Friendships");
                 });
 #pragma warning restore 612, 618
         }

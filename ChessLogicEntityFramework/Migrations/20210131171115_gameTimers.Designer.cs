@@ -4,36 +4,22 @@ using ChessLogicEntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ChessLogicEntityFramework.Migrations
 {
     [DbContext(typeof(ChessAppContext))]
-    partial class ChessAppContextModelSnapshot : ModelSnapshot
+    [Migration("20210131171115_gameTimers")]
+    partial class gameTimers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.1");
-
-            modelBuilder.Entity("ChessLogicEntityFramework.Models.Friendship", b =>
-                {
-                    b.Property<int>("User1ID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("User2ID")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("isAccepted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("User1ID", "User2ID");
-
-                    b.ToTable("Friendships");
-                });
 
             modelBuilder.Entity("ChessLogicEntityFramework.Models.Game", b =>
                 {

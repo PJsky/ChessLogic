@@ -68,5 +68,56 @@ namespace ChessLogicEntityFramework.OperationObjects
             }
             return false;
         }
+
+        public bool MakeFriends(User sender, User receiver)
+        {
+            Friendship friendship = new Friendship();
+            //Sender
+            friendship.User1ID = sender.ID;
+            //Responder
+            friendship.User2ID = receiver.ID;
+
+            if (context.Friendships.Any(f => (f.User1ID == friendship.User1ID && f.User2ID == friendship.User2ID) ||
+                                        (f.User2ID == friendship.User1ID && f.User1ID == friendship.User2ID)))
+                return false;
+            context.Friendships.Add(friendship);
+            context.SaveChanges();
+            return true;
+        }
+
+        public bool RespondToFriendAdd(User sender, User receiver, bool isAccepted)
+        {
+
+            Friendship friendship = context.Friendships.Where(f => f.User1ID == sender.ID && f.User2ID == receiver.ID).FirstOrDefault();
+            if (friendship == null) return false;
+            friendship.isAccepted = isAccepted;
+            context.SaveChanges();
+            return true;
+        }
+
+        public bool RemoveFriend(User friendOne, User friendTwo)
+        {
+            var friendships = context.Friendships.Where(f => (f.User1ID == friendOne.ID && f.User2ID == friendTwo.ID) ||
+                                                       (f.User1ID == friendTwo.ID && f.User2ID == friendOne.ID))
+                                                       .ToList();
+            if (friendships.Count <= 0) return false;
+            context.Friendships.RemoveRange(friendships);
+            context.SaveChanges();
+            return true;
+        }
+
+        public List<Friendship> GetAllFriends(User person)
+        {
+            var personsFriends = context.Friendships.Where(f => f.User1ID == person.ID || f.User2ID == person.ID).ToList();
+            return personsFriends;
+
+        }
+
+        public List<Friendship> GetAllFriends(int personID)
+        {
+            var personsFriends = context.Friendships.Where(f => f.User1ID == personID || f.User2ID == personID).ToList();
+            return personsFriends;
+        }
+
     }
 }

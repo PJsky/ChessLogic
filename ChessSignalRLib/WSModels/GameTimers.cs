@@ -18,6 +18,7 @@ namespace ChessSignalRLibrary.WSModels
         int timeGain;
         string whiteWinner,blackWinner;
         int groupID;
+        private bool isFirstTurn = true;
         //Action<int, string> decideWinner;
         IHubContext<GameHub> hubContext = GameHub.GlobalContext;
 
@@ -63,7 +64,9 @@ namespace ChessSignalRLibrary.WSModels
             {
                 //End turn and add time to white
                 stopwatchWhite.Stop();
-                whiteSecondsLeft += timeGain;
+                if(!isFirstTurn)
+                    whiteSecondsLeft += timeGain;
+                isFirstTurn = false;
                 stopwatchBlack.Start();
 
                 //Release used timer resources and create a new one
@@ -93,7 +96,7 @@ namespace ChessSignalRLibrary.WSModels
             //if (decideWinner.Method != null)
             //    decideWinner(groupID, blackWinner);
             //Console.WriteLine("Game ended on white turn");
-            hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveMessage", "the winner is: " + blackWinner);
+            hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveWinner",   new { winner = blackWinner});
             GameDataAccess gameDataAccess = new GameDataAccess();
             int winnerID = (int)gameDataAccess.GetGame(groupID).PlayerBlackID;
             gameDataAccess.DecideWinner(groupID, winnerID);
@@ -108,11 +111,19 @@ namespace ChessSignalRLibrary.WSModels
             //    decideWinner(groupID, whiteWinner);
             //Console.WriteLine("Game has ended on black turn");
 
-            hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveMessage", "the winner is: " + whiteWinner);
+            hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveWinner", new { winner = whiteWinner });
             GameDataAccess gameDataAccess = new GameDataAccess();
             int winnerID = (int)gameDataAccess.GetGame(groupID).PlayerWhiteID;
             gameDataAccess.DecideWinner(groupID, winnerID);
             gameDataAccess.FinishGame(groupID);
+            endTimer.Stop();
+            endTimer.Close();
+        }
+
+        public void CloseGame()
+        {
+            endTimer.Enabled = false;
+            endTimer.AutoReset = false;
             endTimer.Stop();
             endTimer.Close();
         }

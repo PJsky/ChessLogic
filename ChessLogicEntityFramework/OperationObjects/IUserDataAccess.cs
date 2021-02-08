@@ -13,5 +13,10 @@ namespace ChessLogicEntityFramework.OperationObjects
         bool RemoveUser(int userId);
         bool RemoveUser(string userName);
         bool RemoveUser(User userToDelete);
+        bool MakeFriends(User sender, User receiver);
+        bool RespondToFriendAdd(User sender, User receiver, bool isAccepted);
+        bool RemoveFriend(User friendOne, User friendTwo);
+        List<Friendship> GetAllFriends(User person);
+        List<Friendship> GetAllFriends(int personID);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ChessSignalRLibrary.WSModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ChessSignalRLibrary.GameUserDictonary
@@ -14,6 +15,13 @@ namespace ChessSignalRLibrary.GameUserDictonary
             dictionary.Add(connectionID, group);
         }
         //public static Dictionary<string, string> Get() => dictionary;
+        public static int? GetUsersGame(int userID) 
+        {
+            var userConnectionToGame = connectionList.Where(u => u.UserID == userID).FirstOrDefault();
+            int? GameID = userConnectionToGame == null ? null : (int?)userConnectionToGame.GameRoomID;
+            return GameID;
+        }
+        
         public static List<ConnectedUserGroup> Get() => connectionList;
     }
 }

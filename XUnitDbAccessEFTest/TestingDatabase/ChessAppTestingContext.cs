@@ -11,6 +11,7 @@ namespace XUnitDbAccessEFTest.TestingDatabase
         public DbSet<User> Users { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<UserGames> UserGames { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

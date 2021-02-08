@@ -64,7 +64,7 @@ namespace ChessSignalRLibrary.GameHubObjects
             var gameFromDb = gameDataAccess.GetGame(gameRoomID);
 
             if (gameFromDb.Winner != null) {
-                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveMessage", "the winner is: " + gameFromDb.Winner.ID);
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveWinner", new { winner = gameFromDb.Winner.Name });
                 return; 
             }
 
@@ -87,7 +87,7 @@ namespace ChessSignalRLibrary.GameHubObjects
                 if (!gameTimers.ContainsKey(gameRoomID))
                 {
                     //gameTimers.Add(Int32.Parse(gameRoomID), new GameTimers());
-                    GameTimersDictionary.Add(gameRoomID, gameFromDb.PlayerWhite.Name, gameFromDb.PlayerBlack.Name);
+                    GameTimersDictionary.Add(gameRoomID, gameFromDb.PlayerWhite.Name, gameFromDb.PlayerBlack.Name, gameFromDb.GameTime, gameFromDb.TimeGain);
                     gameTimers[gameRoomID].StartGame();
                 }
                 gameTimers[gameRoomID].ChangeTurn();
@@ -105,10 +105,14 @@ namespace ChessSignalRLibrary.GameHubObjects
                 await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveBoard", serializedBoard);
             }
 
-            if (game.winner != null) { 
-                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveWinner", game.winner.Name);
-                gameDataAccess.DecideWinner(gameFromDb.ID,userDataAccess.GetUser(game.winner.Name));
+            if (game.winner != null) {
+                await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveWinner", new { winner = game.winner.Name });
+
+                var winnerID = gameFromDb.PlayerWhite.Name == game.winner.Name ? gameFromDb.PlayerWhiteID : null;
+                winnerID = gameFromDb.PlayerBlack.Name == game.winner.Name ? gameFromDb.PlayerBlackID : null;
+                gameDataAccess.DecideWinner(gameFromDb.ID, (int)winnerID);
                 gameDataAccess.FinishGame(gameFromDb.ID);
+                GameTimersDictionary.gameTimersDictionary[gameFromDb.ID].CloseGame();
                 gameTimers.Remove(gameFromDb.ID);
             }
         }
@@ -166,13 +170,17 @@ namespace ChessSignalRLibrary.GameHubObjects
                 
                 Clients.Group("gameRoom_" + game.ID).SendAsync("ReceiveTime", new
                 {
-                    ticking = gameObject.chessTimer.ColorsTurn.ToString()
+                    ticking = game.MovesList != null && game.MovesList.Length>5?gameObject.chessTimer.ColorsTurn.ToString():null,
+                    whiteTime = game.GameTime,
+                    blackTime = game.GameTime
                 });
                 
                 return Clients.Caller.SendAsync("ReceiveBoard", serializedBoard);
 
             }
-            
+            //Add spectators
+            Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
+
             return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join full gameroom");
         }
 
@@ -240,10 +248,6 @@ namespace ChessSignalRLibrary.GameHubObjects
             return Clients.Caller.SendAsync("ReceiveMessage", "You were remvoed from all groups");
         }
 
-        public void EndGame(int groupID, string winner, IHubContext<GameHub> hubContext)
-        {
-            hubContext.Clients.Group("gameRoom_" + groupID).SendAsync("ReceiveMessage", "The winner of the game is: " + winner);
-        }
      
 
     }

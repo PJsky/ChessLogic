@@ -8,6 +8,7 @@ using SharedWebObjectsLibrary.Helpers;
 using SharedWebObjectsLibrary.ViewModels.GameModels;
 using SharedWebObjectsLibrary.ViewModels.GameModels.Response;
 using Microsoft.AspNetCore.Mvc;
+using SharedWebObjectsLibrary.ViewModels.GameModels.Request;
 
 namespace ChessWebApiWithSockets.Controllers
 {
@@ -87,6 +88,17 @@ namespace ChessWebApiWithSockets.Controllers
 
             var game = gameDataAccess.AddGame(gamePlayer, null);
             return Ok(new { message = "new game has been created", gameID =  game});
+        }
+
+        [HttpPost("addCustomGame")]
+        public IActionResult AddCustomGame([FromBody] CustomGameRequest gameModel)
+        {
+            var user = userGetter.GetUserFromClaims(HttpContext);
+            User gamePlayer = userDataAccess.GetUser(user.UserID);
+
+            var game = gameDataAccess.AddGame(gamePlayer, null, gameModel.GameTime, gameModel.TimeGain);
+
+            return Ok(new { message = "new game has been created", gameID = game });
         }
 
         [HttpPost("joinGame")]

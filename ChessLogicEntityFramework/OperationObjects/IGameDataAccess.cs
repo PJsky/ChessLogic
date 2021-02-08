@@ -8,6 +8,7 @@ namespace ChessLogicEntityFramework.OperationObjects
     public interface IGameDataAccess
     {
         int AddGame(User playerWhite, User playerBlack);
+        int AddGame(User playerWhite, User playerBlack, int gameTime, int timeGain);
         Game GetGame(int id);
         List<Game> GetGames(Func<Game, bool> filter = null);
         List<Game> GetUserGames(int userID, Func<Game, bool> filter = null);

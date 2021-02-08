@@ -23,6 +23,7 @@ namespace ChessLogicEntityFramework.OperationObjects
         public Game GetGame(int id)
         {
             Game Game = context.Games.Find(id);
+            if (Game == null) return Game;
             Game.PlayerBlack = context.Users.Where(u => u.ID == Game.PlayerBlackID).FirstOrDefault();
             Game.PlayerWhite = context.Users.Where(u => u.ID == Game.PlayerWhiteID).FirstOrDefault();
             return Game;
@@ -47,9 +48,16 @@ namespace ChessLogicEntityFramework.OperationObjects
 
         public int AddGame(User playerWhite, User playerBlack)
         {
+            return AddGame(playerWhite, playerBlack, 40, 10);
+        }
+
+        public int AddGame(User playerWhite, User playerBlack, int gameTime, int timeGain)
+        {
             Game newGame = new Game();
             newGame.PlayerWhite = playerWhite;
             newGame.PlayerBlack = playerBlack;
+            newGame.GameTime = gameTime;
+            newGame.TimeGain = timeGain;
             context.Games.Add(newGame);
             context.SaveChanges();
             return newGame.ID;
