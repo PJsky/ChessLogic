@@ -1,4 +1,5 @@
-﻿using ChessLogicEntityFramework.OperationObjects;
+﻿using ChessLogicEntityFramework.Models;
+using ChessLogicEntityFramework.OperationObjects;
 using ChessLogicLibrary.ChessBoardSerializers;
 using ChessLogicLibrary.ChessPiecePosition;
 using ChessLogicLibrary.ChessPieces;
@@ -89,6 +90,14 @@ namespace ChessSignalRLibrary.GameHubObjects
                     //gameTimers.Add(Int32.Parse(gameRoomID), new GameTimers());
                     GameTimersDictionary.Add(gameRoomID, gameFromDb.PlayerWhite.Name, gameFromDb.PlayerBlack.Name, gameFromDb.GameTime, gameFromDb.TimeGain);
                     gameTimers[gameRoomID].StartGame();
+                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerWhiteID).SendAsync("ReceiveMessage", new
+                    {
+                        message = "fuck you!! from white"
+                    });
+                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerBlackID).SendAsync("ReceiveMessage", new
+                    {
+                        message = "fuck you!! from black"
+                    });
                 }
                 gameTimers[gameRoomID].ChangeTurn();
                 await Clients.Group("gameRoom_" + gameFromDb.ID).SendAsync("ReceiveTime", new
@@ -141,17 +150,6 @@ namespace ChessSignalRLibrary.GameHubObjects
             }
             if (game.PlayerBlackID == Int32.Parse(userID) || game.PlayerWhiteID == Int32.Parse(userID)) {
 
-                Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
-                
-
-                //if (!gameTimers.ContainsKey(Int32.Parse(gameRoomID))) {
-                //    //gameTimers.Add(Int32.Parse(gameRoomID), new GameTimers());
-                //    if(game.PlayerWhite!=null && game.PlayerBlack != null) { 
-                //        GameTimersDictionary.Add(Int32.Parse(gameRoomID), game.PlayerWhite.Name, game.PlayerBlack.Name);
-                //        gameTimers[Int32.Parse(gameRoomID)].StartGame();
-                //    }
-                //}
-                //dict.Add(Context.ConnectionId, "gameRoom_" + gameRoomID);
                 connectionList.RemoveAll(c => c.ConnectionID == Context.ConnectionId || c.UserID == Int32.Parse(userID));
                 connectionList.Add(new ConnectedUserGroup
                 {
@@ -160,6 +158,10 @@ namespace ChessSignalRLibrary.GameHubObjects
                     GameRoomID = Int32.Parse(gameRoomID)
                 });
 
+
+            }
+
+                Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
                 var gameMapper = new StandardGameMapper(new UserDataAccess());
                 var gameObject = gameMapper.MapDbToGame(game);
                 var serializedBoard = StandardChessBoardSerializer.Serialize(gameObject.chessBoard);
@@ -168,20 +170,29 @@ namespace ChessSignalRLibrary.GameHubObjects
                 Clients.Caller.SendAsync("ReceiveTurn", 
                     new { lastTurnMove = game.MovesList.Substring(game.MovesList.Length-6)});
                 
-                Clients.Group("gameRoom_" + game.ID).SendAsync("ReceiveTime", new
-                {
-                    ticking = game.MovesList != null && game.MovesList.Length>5?gameObject.chessTimer.ColorsTurn.ToString():null,
-                    whiteTime = game.GameTime,
-                    blackTime = game.GameTime
-                });
-                
+                if(gameTimers.ContainsKey(game.ID))
+                    Clients.Group("gameRoom_" + game.ID).SendAsync("ReceiveTime", new
+                    {
+                        ticking = gameObject.chessTimer.ColorsTurn.ToString(),
+                        whiteTime = gameTimers[game.ID].WhiteTime,
+                        blackTime = gameTimers[game.ID].BlackTime
+                    });
+                else
+                    Clients.Group("gameRoom_" + game.ID).SendAsync("ReceiveTime", new
+                    {
+                        ticking = game.MovesList != null && game.MovesList.Length>5?gameObject.chessTimer.ColorsTurn.ToString():null,
+                        whiteTime = game.GameTime,
+                        blackTime = game.GameTime
+                    });
+            
+
+
                 return Clients.Caller.SendAsync("ReceiveBoard", serializedBoard);
 
-            }
             //Add spectators
-            Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
+            //Groups.AddToGroupAsync(Context.ConnectionId, "gameRoom_" + gameRoomID);
 
-            return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join full gameroom");
+            //return Clients.Caller.SendAsync("ReceiveMessage", "Tried to join full gameroom");
         }
 
         public Task SendMessageToGroup(string gameRoomID, string moveString)
@@ -206,6 +217,18 @@ namespace ChessSignalRLibrary.GameHubObjects
 
         public override Task OnConnectedAsync()
         {
+            var userDataAccess = new UserDataAccess();
+            var userID = Context.User.Identity.Name;
+            List<int> friendsIDs = new List<int>();
+            if(userID != null)
+                friendsIDs = userDataAccess.GetAllFriends(Int32.Parse(userID))
+                                           .Select(f => f.User1ID == Int32.Parse(userID)? f.User2ID : f.User1ID)
+                                           .ToList();
+
+            for(int i = 0; i < friendsIDs.Count; i++)
+            {
+                Groups.AddToGroupAsync(Context.ConnectionId, "FriendsWith_" + friendsIDs[i]);
+            }
             return base.OnConnectedAsync();
         }
 
@@ -227,11 +250,17 @@ namespace ChessSignalRLibrary.GameHubObjects
             var gameFromDb = gameDataAccess.GetGame(connection.GameRoomID);
             connectionList.RemoveAll(con => con.ConnectionID == Context.ConnectionId);
 
-            if (gameFromDb.PlayerWhiteID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
+            if (gameFromDb.PlayerWhiteID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID))
                 gameDataAccess.ChangePlayers(gameFromDb.ID, null, gameFromDb.PlayerBlack);
 
-            else if (gameFromDb.PlayerBlackID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
+            else if (gameFromDb.PlayerBlackID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID))
                 gameDataAccess.ChangePlayers(gameFromDb.ID, gameFromDb.PlayerWhite, null);
+
+            //if (gameFromDb.PlayerWhiteID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
+            //    gameDataAccess.ChangePlayers(gameFromDb.ID, null, gameFromDb.PlayerBlack);
+
+            //else if (gameFromDb.PlayerBlackID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
+            //    gameDataAccess.ChangePlayers(gameFromDb.ID, gameFromDb.PlayerWhite, null);
 
             //if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
             //    gameDataAccess.RemoveGame(gameFromDb);
