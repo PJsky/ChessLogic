@@ -28,6 +28,7 @@ They were:
 To have a presistent data which would allow to complete several of functionalities listed I decided to create a simple database. That database had to store the following:
 
  - **Users** - Saving registered users and their passwords
+ 
 	
 |  Column Name| Data Type |
 |---|--|
@@ -109,9 +110,11 @@ This chapter describes how exactly the application works from both client and se
 This section describes problems that were resolved during the frontend developement and use of backend APIs for that purpose.
 ## 4.1.1 Identification system
 System that most of modern web applications must have. It allows for a simple registration and login through a form
+
 ![Login and Register](https://i.ibb.co/F5V2Mzd/1-Login-Register.png) 
 If valid data is given pressing the form button (Log in/ Create Account) will send a POST request to a backend with a given data. Upon successful registration/log in client receives a JWT token to preserve in localstorage that will be used as a mean of user identification. 
 If user tries to send invalid data one of two things will occur. Firstly he may not pass frontend validation. 
+
 ![Frontend validation](https://i.ibb.co/K7dwZ6q/2-Login-Register-Validation.png)
 Client will be given simple prompts as to what he needs to change in order to send this form.
 Frontend validation was made thanks to combination of Formik and Yup. Formik is the most popular library for creating forms when using React. It takes care of proper data binding, component updates and allows to validate its data. Yup is a framework that is used in pair with Formik. It gives creators opportunity to create simple, short validation schemas like this one:
@@ -144,41 +147,53 @@ setListOfGames(response.data);
 })
 ```
 And so they are displayed
+
 ![GET display](https://i.ibb.co/gJPVNYJ/3-GET.png)
 Those same ideas are used to search for people and add them as friends. Navbar contains a lookup feature where u may type the name of a friend or its part to find him
+
 ![Navbar lookup](https://i.ibb.co/s5QrgjV/3-2Navar.png)
 Once the form is submited client is moved to a list of searches matched to this particular string of characters
 ![Search results](https://i.ibb.co/0yKVLZG/3-3search.png)
 Here client may choose if he wants to add someone. After someone has send a request the receiving party may either accept it or reject the invitation
+
 ![Response to invitation](https://i.ibb.co/60r4wX9/3-4response.png)
 
 
 ## 4.1.3 Realtime Communication
 This application allows to add friends and know when they start/end games. Such systems makes it easy for a client to watch his friends games or rewatch them after they have ended.
 SignalR was used to make such connection between client and server. When one player begins/finishes a game a promt appears on navbar
+
 ![Event prompt](https://i.ibb.co/cJfkBSb/4-Prompt.png) 
 This communication was also used to make playing chess and spectating those games possible.
 ## 4.1.4 Gameplay 
 Each chess games needs several things to begin. Firstly we need to decide on how much time each player is allowed and how much time they will gain per move/turn
+
 ![New game modal](https://i.ibb.co/FnwXZJn/5-New-Game-Modal.png)
 For example we create a game with 180 seconds and 10 seconds time gain per turn.
 Then the game is created and other user may join it by selecting it in the list presented in chapter 4.1.2. This is how a gameroom looks when both players joined
+
 ![Gameroom](https://i.ibb.co/FHrmjDT/6-2-Gameroom.png)
 Once a player will make a move game will begin and prompt will be send to all of their friends that the game has begun. From the player perspective we see that the move has been made and the timers start to tick. The black player sees the board upside down and this is how first two moves would look from his point of view
+
 ![First move](https://i.ibb.co/LPyRQqq/7-1-Firstmove.png)
+
 ![Second move](https://i.ibb.co/SXNWLbq/8-2-Sec-Move.png)
 After a move made player time goes up by "time gain" chosen upon creation. Those timers are implemented on both client side and server side. Whenever move is made client not only receives the update of a board state but also how much time each of players have left. 
 As a players friend we see the prompt and may find that the game has begun on a event feed. We can begin to spectate the game and see what each of those players sees
 
 ![Event](https://i.ibb.co/7Jpq88M/9-Spectate.png)
+
 ![Spectators view](https://i.ibb.co/QQ10Jtk/10-2-Join-As-Spectator.png)
 There are currently 2 ways to finish the game. Both of them are by winning. You can win either by checkmate or by your opponents time running out.
 ## 4.1.5 Game replay
-After the game has ended players and spectators will see a modal saying who won.
+After the game has ended players and spectators will see a modal saying who won
+
 ![EndGame modal](https://i.ibb.co/syTv1xd/11-Game-End.png)
 Here client may choose whether to rewatch the game or quit to the main page. If client chooses to rewatch the game he will be moved to a room where he easly replay all the moves made. Same room may be accessed from match history (if you were the player) or thourgh history feed (if you are friend of the player)
+
 ![Replay room](https://i.ibb.co/9qfj9DT/12-Gamereplay.png)
 In this room a client may click + and minus button to change turns. The + button takes game to the next move and the - button to the previous one. For example he may check the 3rd turn
+
 ![enter image description here](https://i.ibb.co/swJYwmW/13-Replay.png)
 
 ## 4.2 Backend problems
@@ -252,6 +267,7 @@ The last thing that was needed was a game replayer. An element that given a stri
 After reading "clean architecture" by Bob Martin I decided to explore the function programming paradigm a bit. Reading some articles and watching some videos made me realize that I may implement similar mechanism in the application I currently work on. I heard that many systems may never change their data. They would simply store all changes and apply them on the starting data to get what is needed when the function is called (e.g. GitHub allows to check every commit, saves every change made). I came to a conclusion that my database entity representing game could save only the moves made and not the current state of pieces. This has influenced the application just the way it was expected to. Firstly there was no need store the state of the game because each time it was needed we could recreate it. Secondly it made rewatching game truly easly to implement.  
 ## 4.2.3 Interchangable components
 Other piece of knowledge that I gained from "clean architecture" was the idea of creating loosely coupled, intechangable components. Presented application was a place of practice where this idea was explored by me. The logic behind chess game was put inside its own library  and when it was finished it had no interface given. Because there was no interface it was possible to make any interface work. The goal was to make a website to play chess but first I decided to test it out in a console. Given a little time I managed to create a simple console app that would take our move input and allowed me to play the game. Here is a presentation of how 2 moves would like in console
+
 ![Console version](https://i.ibb.co/pLYsD4q/14-Console-game.png)
 Knowing that the game can be played and works correctly (as expected from tests) I proceeded to work on a web version. First step was to create a database so that we may have persistant data. This time after being inspired to try and decouple components I began working on a database access which could be changed at any time. The database access library was created and I decided to use Entity Framework. For each class which would access database an interface like the one below was made
 ```csharp
