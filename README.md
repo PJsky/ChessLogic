@@ -1,4 +1,36 @@
-﻿# 1. Overview
+﻿# Table of contents
+
+# Table of Contents
+1. [Overview]()
+2. [Application design]()
+	2.1. [Functionality]()
+	2.2. [Database]()
+3. [Technology]()
+	3.1. [Frontend]()
+	3.2. [Backend]()
+	3.3. [Other]()
+4. [Implementation]()
+	4.1. [Frontend problems]()
+		&nbsp; 4.1.1. [Identification system]()
+		&nbsp; 4.1.2. [HTTP communication with backend](#412-http-communication-with-backend)
+		&nbsp; 4.1.3. [Realtime communication](#413-realtime-communication)
+		&nbsp; 4.1.4. [Gameplay](#414-gameplay)
+		&nbsp; 4.1.5. [Game replay](#415-game-replay)
+	4.2. [Backend problems](#42-backend-problems)
+	&nbsp; 4.2.1.[Chess game core](#421-chess-game-core)
+	&nbsp; 4.2.2.[Functional programming idea](#422-functional-programming-idea)
+	&nbsp; 4.2.3.[Interchangable components](#423-interchangable-components)
+	&nbsp; 4.2.4.[Test Driven Development](#424-test-driven-development)
+	&nbsp; 4.2.5.[Web API](#425-web-api)
+	&nbsp; 4.2.6.[SignalR communication](#426-signalr-communication)
+5. [Conclusions](#5-conclusions)
+	5.1.[Goals met](#51-goals-met)
+	5.2.[Possible improvements of development](#52-possible-improvements-of-development)
+	5.3.[Possible additions to application](#53-possible-additions-to-application)
+
+
+
+# 1.Overview
 
 The application is a sum of 2 parts:
 
@@ -10,7 +42,7 @@ The application is a sum of 2 parts:
 # 2. Application design
 The process of designing this application allowed to create a vision of an application upon completion. To get that correctly I had to decide upon neccessary functionalities and how the data stored will need to look
 
-## **2.1 Functionality**
+## 2.1 Functionality
 
 During the designing process specific functionalities that had to be created came up. 
 They were:
@@ -60,7 +92,7 @@ To have a presistent data which would allow to complete several of functionaliti
 
 
 
-# 3. Technology
+# 3. Technology<a name="technology">
 Having a simple design makes certain ideas come up. To complete them I could choose proper tools.
 
 ## 3.1 Frontend
@@ -303,7 +335,7 @@ public interface IDbContext
 The context of the database had to implement this interface. It makes it so that we can specify that the class of the given interface will be injected without explicitly saying which class.
  
 
-## 4.2.4 Test Driven
+## 4.2.4 Test Driven Development
 At the beggining application was developed without any interface for user to interact with. All code written had to pass the designated unit tests. Only after the whole core of a project (chess game) has been completed the first user interface (console app above) was implemented.
 Before any code was written I would create a test for it and make the simpliest case for it to pass. Then I had to make the class so that it would pass the test. After that I would repeat proccess of writting tests and then classes to pass them. I found out that this way made the code better in few ways:
 
@@ -356,7 +388,7 @@ public class ChessAppTestingContext : DbContext, IDbContext, ITestingDbContext
     }
 ```
 This way we could easly run test on database. We would simply use reset function in the setup of the test. The tests covered both data access and game logic. There is a total of 221 tests and all of them pass
-## 4.2.5 Web api
+## 4.2.5 Web API
 Final step to make our applications possibilities available on web was creating a web API. This step presented nothing out of ordinary. Controllers were created, objects for data access were injected into them to inverse dependency. This step was mostly making all of the code created beforehand work with the API interface. The only new problem that appeared when trying to make games online possible was user identification. Knowing that the application frontend and backend will be hosted separetly and communicate via API I decided to use JWT (Json Web Tokens). I created a simple registration and login system that would use hash and salt to add to the apps security
 ```csharp
 internal class PasswordHasher
@@ -520,7 +552,7 @@ At the beggining the application was meant to allow for a simple game of chess. 
 ## 5.2 Possible improvements of development
 There were many things that I belive I could have done better. During the days I was less motivated I created and worse quality of code which I tought I would refactor in future. It never happened. I would also like to create a more complete suite of tests including some controller and signalR hubs tests
 
-## 5.2 Possible additions to application
+## 5.3 Possible additions to application
 
 Application could also have a bit more. In future any of those things may be added:
 
