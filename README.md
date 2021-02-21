@@ -5,10 +5,10 @@ The application is a sum of 2 parts:
  1. **Frontend** - Written in javaScript with a help of React
  2. **Backend** - Written in C# with a help of ASP .NET Core
  
- Application allows to create and play a chess game. Game is played in realtime thanks to WebSockets provided by SignalR. This technology allows to create two-way communication between the client and the server. Such connection makes sending messges from server to client without clients request possible. Thus we may do an action which is sent and processed by server and then it may notify all the clients subscribing for such information.
+ Application allows to create and play a chess game. Game is played in realtime thanks to WebSockets provided by SignalR. This technology allows to create two-way communication between the client and the server. Such connection makes sending messges from server to client without clients request possible. Thus we may send data from server and then it may notify all the clients subscribing for such information
 
 # 2. Application design
-The process of designing this application allowed to create a vision of an application upon completion. To get that correctly I had to decide upon neccessary functionalities and how the data stored will need to look. 
+The process of designing this application allowed to create a vision of an application upon completion. To get that correctly I had to decide upon neccessary functionalities and how the data stored will need to look
 
 ## **2.1 Functionality**
 
