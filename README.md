@@ -1,36 +1,61 @@
 ﻿# Table of contents
 
 # Table of Contents
-1. [Overview](#1-overview)
+1. [Overview](#1-overview)     
+
 2. [Application design](#2-application-design)
+
 	2.1. [Functionality](#21-functionality)
+	
 	2.2. [Database](#22-database)
+
 3. [Technology](#3-technology)
+
 	3.1. [Frontend](#31-frontend)
+	
 	3.2. [Backend](#32-backend)
+	
 	3.3. [Other](#33-others)
+	
 4. [Implementation](#4-implementation)
+
 	4.1. [Frontend problems]()
+	
 		&nbsp; 4.1.1. [Identification system](#41-frontend-problems)
+		
 		&nbsp; 4.1.2. [HTTP communication with backend](#412-http-communication-with-backend)
+		
 		&nbsp; 4.1.3. [Realtime communication](#413-realtime-communication)
+		
 		&nbsp; 4.1.4. [Gameplay](#414-gameplay)
+		
 		&nbsp; 4.1.5. [Game replay](#415-game-replay)
+		
 	4.2. [Backend problems](#42-backend-problems)
+	
 	&nbsp; 4.2.1.[Chess game core](#421-chess-game-core)
+	
 	&nbsp; 4.2.2.[Functional programming idea](#422-functional-programming-idea)
+	
 	&nbsp; 4.2.3.[Interchangable components](#423-interchangable-components)
+	
 	&nbsp; 4.2.4.[Test Driven Development](#424-test-driven-development)
+	
 	&nbsp; 4.2.5.[Web API](#425-web-api)
+	
 	&nbsp; 4.2.6.[SignalR communication](#426-signalr-communication)
+
 6. [Conclusions](#5-conclusions)
+	
 	5.1.[Goals met](#51-goals-met)
+	
 	5.2.[Possible improvements of development](#52-possible-improvements-of-development)
+	
 	5.3.[Possible additions to application](#53-possible-additions-to-application)
 
 
 
-# 1.Overview
+# 1. Overview
 
 The application is a sum of 2 parts:
 
