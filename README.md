@@ -19,17 +19,17 @@
 	
 4. [Implementation](#4-implementation)
 
-	4.1. [Frontend problems]()
+	4.1. [Frontend problems](#41-frontend-problems)
 	
-		&nbsp; 4.1.1. [Identification system](#41-frontend-problems)
-		
-		&nbsp; 4.1.2. [HTTP communication with backend](#412-http-communication-with-backend)
-		
-		&nbsp; 4.1.3. [Realtime communication](#413-realtime-communication)
-		
-		&nbsp; 4.1.4. [Gameplay](#414-gameplay)
-		
-		&nbsp; 4.1.5. [Game replay](#415-game-replay)
+	&nbsp; 4.1.1. [Identification system](#411-identification-system)
+	
+	&nbsp; 4.1.3. [HTTP communication with backend](#412-http-communication-with-backend)
+	
+	&nbsp;  4.1.3. [Realtime communication](#413-realtime-communication)
+	
+	&nbsp;  4.1.4. [Gameplay](#414-gameplay)
+	
+	&nbsp; 4.1.5. [Game replay](#415-game-replay)
 		
 	4.2. [Backend problems](#42-backend-problems)
 	
