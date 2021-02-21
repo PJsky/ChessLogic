@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ChessSignalRLibrary.GameUserDictonary
 {
-    public static class GameHubDictionary
+    public static class GameTimersDirectory
     {
         public static Dictionary<string, string> dictionary = new Dictionary<string, string>();
         public static List<ConnectedUserGroup> connectionList = new List<ConnectedUserGroup>();

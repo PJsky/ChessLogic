@@ -73,7 +73,8 @@ namespace ChessWebApiWithSockets.Controllers
             if (user == null) return BadRequest("U are not logged in");
             List<Game> games = new List<Game>();
             User gamePlayer = userDataAccess.GetUser(user.UserID);
-            games = gameDataAccess.GetGames(g => (g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID) && g.WinnerID != null);
+            games = gameDataAccess.GetGames(g => (g.PlayerWhiteID == gamePlayer.ID || g.PlayerBlackID == gamePlayer.ID) && g.WinnerID != null)
+                                  .OrderByDescending(g => g.FinishedDate).ToList();
 
             var gamesModels = games.Select(g => ViewModelMapper.MapGameToPresentation(g));
             return Ok(gamesModels);

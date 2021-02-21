@@ -18,5 +18,7 @@ namespace ChessLogicEntityFramework.Models
         public ICollection<UserGames> UserGames {get; set;}
         public int GameTime { get; set; }
         public int TimeGain { get; set; }
+        public DateTime? StartedDate { get; set; }
+        public DateTime? FinishedDate { get; set; }
     }
 }

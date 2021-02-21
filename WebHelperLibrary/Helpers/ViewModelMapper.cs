@@ -18,7 +18,10 @@ namespace SharedWebObjectsLibrary.Helpers
                 GameID = game.ID,
                 PlayerWhite = game.PlayerWhiteID == null ? null : userDataAccess.GetUser((int)game.PlayerWhiteID).Name,
                 PlayerBlack = game.PlayerBlackID == null ? null : userDataAccess.GetUser((int)game.PlayerBlackID).Name,
-                MovesList = game.MovesList
+                MovesList = game.MovesList,
+                GameTime = game.GameTime,
+                TimeGain = game.TimeGain,
+                Date = game.FinishedDate
             };
             return gameModel;
         }

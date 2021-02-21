@@ -34,6 +34,12 @@ namespace ChessLogicEntityFramework.OperationObjects
             List<Game> GameList = context.Games.ToList();
             if (filter != null)
                 GameList = GameList.Where(filter).ToList();
+            GameList = GameList.Select(g =>
+            {
+                if (g.PlayerWhiteID != null) g.PlayerWhite = context.Users.Find(g.PlayerWhiteID);
+                if (g.PlayerBlackID != null) g.PlayerBlack = context.Users.Find(g.PlayerBlackID);
+                return g;
+            }).ToList();
             return GameList;
         }
 
@@ -98,6 +104,9 @@ namespace ChessLogicEntityFramework.OperationObjects
 
             if (game == null) return false;
 
+            if (game.MovesList == null || game.MovesList.Length == 0)
+                game.StartedDate = DateTime.Now;
+
             game.MovesList = Moves;
             context.SaveChanges();
             return true;
@@ -127,6 +136,7 @@ namespace ChessLogicEntityFramework.OperationObjects
 
             if (game == null) return false;
             game.IsFinished = true;
+            game.FinishedDate = DateTime.Now;
             context.SaveChanges();
             return true;
         }
@@ -136,6 +146,9 @@ namespace ChessLogicEntityFramework.OperationObjects
             Game game = GetGame(gameID);
 
             if (game == null) return false;
+
+            if (game.MovesList == null || game.MovesList.Length == 0)
+                game.StartedDate = DateTime.Now;
 
             game.MovesList += Move;
             context.SaveChanges();

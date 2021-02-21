@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace ChessSignalRLibrary.WSModels
@@ -98,9 +99,11 @@ namespace ChessSignalRLibrary.WSModels
             //Console.WriteLine("Game ended on white turn");
             hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveWinner",   new { winner = blackWinner});
             GameDataAccess gameDataAccess = new GameDataAccess();
-            int winnerID = (int)gameDataAccess.GetGame(groupID).PlayerBlackID;
+            var game = gameDataAccess.GetGame(groupID);
+            int winnerID = (int)game.PlayerBlackID;
             gameDataAccess.DecideWinner(groupID, winnerID);
             gameDataAccess.FinishGame(groupID);
+            CommunicateEnd((int)game.PlayerWhiteID, (int)game.PlayerBlackID);
             endTimer.Stop();
             endTimer.Close();
         }
@@ -113,9 +116,11 @@ namespace ChessSignalRLibrary.WSModels
 
             hubContext.Clients.Groups("gameRoom_" + groupID).SendAsync("ReceiveWinner", new { winner = whiteWinner });
             GameDataAccess gameDataAccess = new GameDataAccess();
-            int winnerID = (int)gameDataAccess.GetGame(groupID).PlayerWhiteID;
+            var game = gameDataAccess.GetGame(groupID);
+            int winnerID = (int)game.PlayerWhiteID;
             gameDataAccess.DecideWinner(groupID, winnerID);
             gameDataAccess.FinishGame(groupID);
+            CommunicateEnd((int) game.PlayerWhiteID, (int) game.PlayerBlackID);
             endTimer.Stop();
             endTimer.Close();
         }
@@ -126,6 +131,18 @@ namespace ChessSignalRLibrary.WSModels
             endTimer.AutoReset = false;
             endTimer.Stop();
             endTimer.Close();
+        }
+
+        public void CommunicateEnd(int playerWhiteID, int playerBlackID)
+        {
+            hubContext.Clients.Group("FriendsWith_" + playerWhiteID).SendAsync("ReceiveEvent", new
+            {
+                message = "game has ended!! from white"
+            });
+            hubContext.Clients.Group("FriendsWith_" + playerBlackID).SendAsync("ReceiveEvent", new
+            {
+                message = "game has ended!! from black"
+            });
         }
     }
 }

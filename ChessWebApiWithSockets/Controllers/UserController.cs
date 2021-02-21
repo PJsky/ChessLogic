@@ -53,6 +53,8 @@ namespace ChessWebApiWithSockets.Controllers
         {
             User user = new User();
             user.Name = authUser.Name;
+            if (authUser.Name.Length < 6) return BadRequest("Name too short");
+            if (authUser.Password.Length < 6) return BadRequest("Password too short");
             try
             {
                 userDataAccess.AddUser(user, authUser.Password);

@@ -25,7 +25,7 @@ namespace ChessSignalRLibrary.GameHubObjects
             GlobalContext = ctx;
         }
         //Dictionary<string, string> dict = GameHubDictionary.Get();
-        List<ConnectedUserGroup> connectionList = GameHubDictionary.connectionList;
+        List<ConnectedUserGroup> connectionList = GameTimersDirectory.connectionList;
         Dictionary<int, GameTimers> gameTimers = GameTimersDictionary.gameTimersDictionary;
         public async Task SendMessageToAll(string message)
         {
@@ -90,13 +90,13 @@ namespace ChessSignalRLibrary.GameHubObjects
                     //gameTimers.Add(Int32.Parse(gameRoomID), new GameTimers());
                     GameTimersDictionary.Add(gameRoomID, gameFromDb.PlayerWhite.Name, gameFromDb.PlayerBlack.Name, gameFromDb.GameTime, gameFromDb.TimeGain);
                     gameTimers[gameRoomID].StartGame();
-                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerWhiteID).SendAsync("ReceiveMessage", new
+                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerWhiteID).SendAsync("ReceiveEvent", new
                     {
-                        message = "fuck you!! from white"
+                        message = "game has started!! from white"
                     });
-                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerBlackID).SendAsync("ReceiveMessage", new
+                    await Clients.Group("FriendsWith_" + gameFromDb.PlayerBlackID).SendAsync("ReceiveEvent", new
                     {
-                        message = "fuck you!! from black"
+                        message = "game has started!! from black"
                     });
                 }
                 gameTimers[gameRoomID].ChangeTurn();
@@ -121,6 +121,16 @@ namespace ChessSignalRLibrary.GameHubObjects
                 winnerID = gameFromDb.PlayerBlack.Name == game.winner.Name ? gameFromDb.PlayerBlackID : null;
                 gameDataAccess.DecideWinner(gameFromDb.ID, (int)winnerID);
                 gameDataAccess.FinishGame(gameFromDb.ID);
+
+                await Clients.Group("FriendsWith_" + gameFromDb.PlayerWhiteID).SendAsync("ReceiveEvent", new
+                {
+                    message = "!! from white, Game Ended"
+                });
+                await Clients.Group("FriendsWith_" + gameFromDb.PlayerBlackID).SendAsync("ReceiveEvent", new
+                {
+                    message = "!! from black, Game Ended"
+                });
+
                 GameTimersDictionary.gameTimersDictionary[gameFromDb.ID].CloseGame();
                 gameTimers.Remove(gameFromDb.ID);
             }
@@ -250,28 +260,15 @@ namespace ChessSignalRLibrary.GameHubObjects
             var gameFromDb = gameDataAccess.GetGame(connection.GameRoomID);
             connectionList.RemoveAll(con => con.ConnectionID == Context.ConnectionId);
 
-            if (gameFromDb.PlayerWhiteID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID))
+            if (gameFromDb.PlayerWhiteID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID) && !gameFromDb.IsFinished)
                 gameDataAccess.ChangePlayers(gameFromDb.ID, null, gameFromDb.PlayerBlack);
 
-            else if (gameFromDb.PlayerBlackID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID))
+            else if (gameFromDb.PlayerBlackID == connection.UserID && !gameTimers.ContainsKey(gameFromDb.ID) && !gameFromDb.IsFinished)
                 gameDataAccess.ChangePlayers(gameFromDb.ID, gameFromDb.PlayerWhite, null);
-
-            //if (gameFromDb.PlayerWhiteID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
-            //    gameDataAccess.ChangePlayers(gameFromDb.ID, null, gameFromDb.PlayerBlack);
-
-            //else if (gameFromDb.PlayerBlackID == connection.UserID || gameTimers.ContainsKey(gameFromDb.ID))
-            //    gameDataAccess.ChangePlayers(gameFromDb.ID, gameFromDb.PlayerWhite, null);
-
-            //if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
-            //    gameDataAccess.RemoveGame(gameFromDb);
-
-            //if (gameFromDb.PlayerBlackID == null && gameFromDb.PlayerWhiteID == null)
-            //    gameDataAccess.FinishGame(gameFromDb.ID);
-
 
             Clients.Group("gameRoom_" + connection.GameRoomID).SendAsync("ReceivePlayers", 
                 new { 
-                    p1 = gameFromDb.PlayerWhite!=null? gameFromDb.PlayerWhite.Name : null, 
+                    p1 = gameFromDb.PlayerWhite != null? gameFromDb.PlayerWhite.Name : null, 
                     p2 = gameFromDb.PlayerBlack != null ? gameFromDb.PlayerBlack.Name : null
                 });
             return Clients.Caller.SendAsync("ReceiveMessage", "You were remvoed from all groups");
