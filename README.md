@@ -499,10 +499,10 @@ private void EndOnTimeOnWhite(Object source, ElapsedEventArgs e)
 
 # 5. Conclusions
 ## 5.1 Goals met
-At the beggining the application was meant to allow for a simple game of chess. It evolved into a web application which allows to not only play games but also rewatch and spectate them. I wanted to implement what I have learned about clean architecture and I tried my best. It improved the loosly coupledness and testability of my code.
+At the beggining the application was meant to allow for a simple game of chess. It evolved into a web application which allows to not only play games but also rewatch and spectate them. I wanted to implement what I have learned about clean architecture and I tried my best. It improved the loosly coupledness and testability of my code
 
 ## 5.2 Possible improvements of development
-There were many things that I belive I could have done better. During the days I was less motivated I created and worse quality of code which I tought I would refactor in future. It never happened. I would also like to create a more complete suite of tests including some controller and signalR hubs tests. 
+There were many things that I belive I could have done better. During the days I was less motivated I created and worse quality of code which I tought I would refactor in future. It never happened. I would also like to create a more complete suite of tests including some controller and signalR hubs tests
 
 ## 5.2 Possible additions to application
 
