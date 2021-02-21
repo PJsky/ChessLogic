@@ -1,6 +1,4 @@
-﻿# Table of contents
-
-# Table of Contents
+﻿# Table of Contents
 1. [Overview](#1-overview)     
 
 2. [Application design](#2-application-design)
